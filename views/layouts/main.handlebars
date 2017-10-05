@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Actor Database</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    {{#if showTests}}
+        <link rel="stylesheet" href="/vendor/mocha.css">
+    {{/if}}
+    <style media="screen">
+          #speechBtn {
+            background-image: url("img/network.png");
+            background-size: contain;
+            background-color: lightgrey;
+          }
+          #sentencesSpan{
+            color:lightblue;
+            letter-spacing: 2px;
+
+          }
+          .customTitles{
+            font-size: 1.5em;
+            color:black;
+          }
+          .table_bottom_border td {
+            border-bottom: 1px solid lightgrey;
+          }
+    </style>
+  </head>
+  <body style='background-color:black; color:white;'>
+    <!-- Header -->
+    <div class="header">
+      <div class=""><img src="img/logo.jpg" alt="" style="width:300px;">  </div>
+    </div>
+    <!-- Body -->
+    <div class="mainContainer1" style=' width:30%; height:700px; float:left; border:1px solid lightblue; '>
+      <div class="" id='speechField' style=" width:100%; height:100px;line-height:100px; text-align:center; margin:0 auto;"></div>
+      <div class="">
+        <div id='speechBtn' style=' cursor:pointer; width:100px; height:100px; border-radius:100%;  line-height:100px; text-align:center; margin:0 auto; margin-top:30px;'></div>
+        <div class="" id='textField1' style=" text-align:center;">Hi there, I am lovely</div>
+        <div class="" id='textField2' style=" text-align:center;"><h3 style="color:grey;">Something you can ask me</h3></div>
+        <div class="" id='optionField' style=" text-align:center; height:390px; overflow:scroll; "></div>
+      </div>
+    </div>
+    <div id="mainContainer2" style=' width:69%; height:700px; float:right; border:1px solid lightblue;'>
+        {{{body}}}
+    </div>
+      <!-- Footer -->
+
+        {{#if showTests}}
+              <div id="mocha"></div>
+              <script src="/vendor/mocha.js"></script>
+              <script src="/vendor/chai.js"></script>
+              <script>
+                 mocha.ui('tdd');
+                 var assert = chai.assert;
+             </script>
+             <script src="/qa/test-global.js"></script>
+             {{#if pageTestScript}}
+                <script src="{{pageTestScript}}"></script>
+             {{/if}}
+             <script>mocha.run();</script>
+      {{/if}}
+      <script src="//code.jquery.com/jquery-2.0.2.min.js"> </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+      <script type="text/javascript">
+      var spoken = false;
+      var context={context:"normal", data:"false"};
+      var sentences =["Where my class is located","who is my teacher","tell me my teacher office hour","what time is my class","What events on campus today","what is the last day to drop or add class","what time the shutle will be here", "where is my teacher office"];
+      var r = document.getElementById("speechField");
+      //var r0 = document.getElementById("result0");
+      var info = document.getElementById("speechBtn");
+      var optionField = document.getElementById("optionField");
+      for(var i =0; i< sentences.length; i++){
+        optionField.innerHTML += "<p id='sentencesSpan'>"+sentences[i]+"</p>"+"<br>";
+      }
+      startIt();
+          function startIt(){
+           //ecoute=true;
+          // if(sound){
+          //   soundIt();
+          // }
+
+          var recognition = new webkitSpeechRecognition();
+          recognition.lang ='en-US';//'en-US';'fr-FR'
+          recognition.interimResults = true;
+          //recognition.continuous = true;
+          var finalTrans ='';
+          info.addEventListener("click",function(){
+            finalTrans ='';
+           r.innerHTML="";
+           recognition.start();
+           spoken = false;
+              });
+          //recognition.start();
+          //info.innerHTML="listening...";
+          // recognition.onsoundstart = function(){
+          //
+          // }
+
+
+          recognition.onresult = function(event) {
+
+            var interimTrans='';
+            for(var i =event.resultIndex; i<event.results.length; i++){
+              var trans = event.results[i][0].transcript;
+              trans.replace("\n", "<br>");
+              if(event.results[i].isFinal){
+                finalTrans= trans;
+              }
+              else{
+                interimTrans=trans;
+              }
+            }
+            r.innerHTML = finalTrans+"<span style='color:red'> "+ interimTrans+"</span>";
+            //r0.innerHTML ="<span style='color:darkgrey'> "+ interimTrans+"</span>";
+             action(finalTrans);
+             //console.log("result");
+             spoken =true;
+          }
+          recognition.onaudiostart = function(){
+            $("#textField1").html("Yes, I am listening...");
+            $("#speechBtn").css({"background-color":"green"});
+            //console.log("audio starts");
+
+          }
+          recognition.onsoundend = function(){
+            //recognition.start();
+            //info.innerHTML="speak!";
+            $("#textField1").html("What can I do for you?");
+            //console.log("sound ends");
+
+          }
+          recognition.onaudioend = function(e) {
+            //console.log("audio ends");
+            $("#textField1").html("What can I do for you?");
+            $("#speechBtn").css({"background-color":"red"});
+            //console.log("capture2 ended");
+            if(spoken){
+              setTimeout(function(){
+                spoken = false;
+                finalTrans ='';
+                recognition.stop();
+                recognition.start();
+                //console.log("restarting")
+              }, 700);
+            }
+
+          }
+
+          recognition.onerror = function(event){
+            //console.log(event);
+            if(event.error==="no-speech"){
+
+              //speakIt("i did not hear anything!","yes");
+              //console.log(event.error);
+            }
+            $("#textField1").html("What can I do for you?");
+            // if(ecoute){
+            //   startIt();
+            // }else {
+            //   console.log("terminated");
+            //   ecoute=true;
+            // }
+          }
+
+          function speakIt(text,after){
+              console.log(recognition.stop());
+              var speech = new SpeechSynthesisUtterance();
+              speech.text= text;
+              speech.lang= "en-US";
+              speech.rate=1;
+              speech.voice = speechSynthesis.getVoices()[32];
+              speechSynthesis.speak(speech);
+              if(after === "yes"){
+                speech.onend= function(){
+                  console.log("speech ended");
+                  setTimeout(function(){
+                    spoken = false;
+                    finalTrans ='';
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                      console.log("Errorrrrrrrrr..............");
+                    }
+                    console.log("restarting")
+                  }, 100);
+                 }
+              }
+              if(after === "music"){
+                speech.onend= function(){
+                  //soundIt("play");
+                  }
+              }
+          }
+
+          function speakClass(theClass,context_data){
+            var class_name = classes[theClass].name;
+            var class_location = classes[theClass].location;
+            var class_day = classes[theClass].day;
+            var class_time = classes[theClass].time;
+            var teacher_name = classes[theClass].teacher.name;
+            var teacher_office = classes[theClass].teacher.office;
+            var teacher_hour = classes[theClass].teacher.hour;
+            var teacher_day = classes[theClass].teacher.day;
+            var text = "class "+ theClass+", titled "+class_name;
+            switch (context_data) {
+              case "find_class":
+                text+= ", is located on"+class_location;
+                text+= ", it is every "+class_day+" from "+class_time;
+                break;
+              case "find_teacher":
+                text+= (teacher_name? ", your teacher is "+teacher_name:"");
+                text+= (teacher_name && teacher_office? ", His office is located on "+teacher_office:"");
+                text+= (teacher_name && teacher_hour? ", His office hour  "+teacher_hour:"");
+                text+= (teacher_name && teacher_day? ", His office day  "+teacher_day:"");
+                break;
+              default:
+
+            }
+            speakIt(text,"yes");
+          }
+          function displayClassInfo(theClass,context_data){
+            var class_name = classes[theClass].name;
+            var class_location = classes[theClass].location;
+            var class_day = classes[theClass].day;
+            var class_time = classes[theClass].time;
+            var teacher_name = classes[theClass].teacher.name;
+            var teacher_office = classes[theClass].teacher.office;
+            var teacher_hour = classes[theClass].teacher.hour;
+            var teacher_day = classes[theClass].teacher.day;
+            var aDiv = $("<div  style='width:100%; margin:0 auto;'></div>");
+            var table =$("<table class='table_bottom_border' style='width:100%; background-color:white; color:grey;'></table>");
+            var tr1 = $("<tr><td class='customTitles'>Title</td><td>"+class_name+"</td></tr>");
+            var tr2 = $("<tr><td class='customTitles'>Location</td><td>"+class_location+"</td></tr>");
+            var tr3 = $("<tr><td class='customTitles'>Day</td><td>"+class_day+"</td></tr>");
+            var tr4 = $("<tr><td class='customTitles'>Time</td><td>"+class_time+"</td></tr>");
+            var tr5 = $("<tr><td class='customTitles'>Teacher</td><td>"+teacher_name+"</td></tr>");
+            var tr6 = $("<tr><td class='customTitles'>Office Location</td><td>"+teacher_office+"</td></tr>");
+            var tr7 = $("<tr><td class='customTitles'>Office Hour</td><td>"+teacher_hour+"</td></tr>");
+            var tr8 = $("<tr><td class='customTitles'>Day</td><td>"+teacher_day+"</td></tr>");
+            switch (context_data) {
+              case "find_class":
+                table.append(tr1,tr2,tr3,tr3,tr4);
+                break;
+              case "find_teacher":
+                table.append(tr5,tr6,tr7,tr8);
+                break;
+              default:
+
+            }
+            aDiv.append(table);
+            $("#mainContainer2").empty();
+            $("#mainContainer2").append(aDiv);
+          }
+
+          function action(x){
+            if(x.length >0){
+              setTimeout(function(){
+                switch (context.context) {
+                  case "normal":
+                  if (x.indexOf("what")!==-1 && x.indexOf("your")!==-1 && x.indexOf("name")!==-1) {
+                    speakIt("my name is lovely, what can i do for you?","yes");
+                  }
+                  else if(x.indexOf("hey")!==-1 && x.indexOf("lovely")!==-1 ){
+                    speakIt("hi!","yes");
+                  }
+                  else if(x.indexOf("stop")!==-1 && x.indexOf("listening")!==-1){
+                    speakIt("ok, i stopped listening");
+                  }
+                  else if((x.indexOf("class")!==-1 && (x.indexOf("located")!==-1 || x.indexOf("location")!==-1 )) || (x.indexOf("find")!==-1 && x.indexOf("class")!==-1)  ){ //Where my class is located
+                    speakIt("What is your class prefix?","yes");
+                    context.context= "class_location";
+                    context.data="find_class";
+                  }else if(x.indexOf("who")!==-1 &&  x.indexOf("teacher")!==-1){ //Where my class is located
+                    speakIt("What is your class prefix?","yes");
+                    context.context= "class_location";
+                    context.data="find_teacher";
+                  }
+                  else if(x.indexOf("thanks")!==-1 || (x.indexOf("thank you")!==-1) || x.indexOf("thank")!==-1){ //Where my class is located
+                    speakIt("it is my pleasure to help","yes");
+                  }
+                  else if(x.indexOf("who")!==-1 && x.indexOf("you")!==-1 ){ //Where my class is located
+                    speakIt("I am lovely","yes");
+                  }
+                  else if(x.indexOf("hi")!==-1  ){ //Where my class is located
+                    speakIt("I am lovely, how can I help","yes");
+                  }
+                  else {
+                    speakIt(x,"yes");
+                  }
+                    break;
+                  case "class_location":
+                      var classPrefix= x.replace(/ /g, '').toLowerCase();
+                      if(classes[classPrefix]){
+                        speakClass(classPrefix,context.data);
+                        displayClassInfo(classPrefix,context.data);
+                        //speakIt("class prefix, "+x+", is located in thayer hall, your teach name is Dr. Voortman ","yes");
+                        context.context = "normal";
+                        context.data = false;
+                      }else {
+                        speakIt("could not found your class, What is your class prefix? please type in the field","no");
+                        var aDiv = $("<div id='inputDiv' style='width:20%; margin:0 auto; margin-top:30px;'></div>");
+                        var input = $("<input type='text' name='' value=''  id='input1' style=' font-size:20px;'>");
+                        var button = $("<button type='button' name='button' id ='findClassBtn'>Find Class</button>");
+                        var table =$("<table></table>");
+                        var tr = $("<tr></tr>");
+                        var td1 = $("<td></td>");
+                        var td2 = $("<td></td>");
+                        tr.append(td1,td2);
+                        table.append(tr);
+                        td1.append(input);
+                        td2.append(button);
+                        aDiv.append(table);
+                        $("#mainContainer2").empty();
+                        $("#mainContainer2").append(aDiv);
+                        $("#input1").trigger( "focus" );
+                        $( "#input1" ).keypress(function(e){
+                          if(e.which === 13){
+                            event.preventDefault();
+                            $("#findClassBtn").trigger("click");
+                          }
+                        });
+                        button.click({input:input},function(e){
+                          if(context.context ==="class_location"){
+                              console.log(e.data.input.val());
+
+                              var classPrefix= e.data.input.val().replace(/ /g, '').toLowerCase();
+                              if(classes[classPrefix]){
+                                speakClass(classPrefix,context.data);
+                                displayClassInfo(classPrefix,context.data);
+                                context.context = "normal";
+                                context.data = false;
+                                aDiv.remove();
+                              }else {
+                                speakIt("could not found your class","no");
+                              }
+                          }
+                        });
+                      }
+                      break;
+                  case "hhhh":
+
+                      break;
+                  default:
+
+                }
+              }, 700);
+            }
+            finalTrans='';
+          }
+      }
+
+      var classes={
+          "cmps361":{
+            "teacher":{
+              "name":"Dr.Voortman",
+              "office": "13th floor west penn building",
+              "hour": "4:00pm to 6:00pm",
+              "day": "Monday"
+            },
+            "name":"web application development",
+            "day": "Thursday",
+            "time":"6:00PM to 9:00PM",
+            "location":"west penn 8th floor , room 804"
+          },
+          "bmgt300":{
+            "teacher":{
+              "name":"Defazio, joseph",
+              "office": "10th floor west penn building",
+              "hour": "2:00pm to 4:00pm",
+              "day": "Thursday"
+            },
+            "name":"Corporate Finance",
+            "day": "Tuesday",
+            "time":"6:00PM to 9:00PM",
+            "location":"west penn 6th floor, room 604"
+          },
+          "bmgt202":{
+            "teacher":{
+              "name":"Fitzhenry, Daniel",
+              "office": "4th floor west penn building",
+              "hour": "4:00pm to 6:00pm",
+              "day": "Monday"
+            },
+            "name":"Business Law 2",
+            "day": "Monday",
+            "time":"6:00PM to 9:00PM",
+            "location":"west penn 7th floor, room 703"
+          }
+      }
+
+      </script>
+  </body>
+</html>
+
