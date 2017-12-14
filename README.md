@@ -1,7 +1,7 @@
 <center><h1>Robot Helper</h1> </center>
 
 <center><h1>Description</h1> </center> 
-<p><span style='color:red' >Robot helper</span> is a voice assistant like Apple's Siri or Amazon's Alexa. However, <span style='color:red' >Robot helper</span> is specific to Point Park University. The goal of Robot Helper is to make accessing information easier for point park community, here on campus</p>
+<p><span style='color:red' >Robot helper</span> is a voice assistant like Siri for Apple or Alexa for Amazon. However, <span style='color:red' >Robot helper</span> is specific to Point Park University. The goal of Robot Helper is to make accessing information easier for point park community, here on campus</p>
 <h6>What Robot Helper can do?</h6>
 Robot Helper can do the following, so far:
 <li>Show Courses Information </li>
