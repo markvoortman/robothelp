@@ -19,43 +19,43 @@ Example: to add a conversation when user say hi Yuma or hi Angela, add this line
 "hi&yuma,angela":{
    func:"speak",param:"Hello, how are you?",
 },
-<b>&</b> meaning that both word are require
-<b>,</b> meaning either one is require
-<b>func</b> let you specify which function you want to use. Here we are using the function speak because we want the system to speak back to us.
-<b>param</b> is a parameter for the chosen function. Here we want the function speak to say "Hello, how are you?" when we say "hi Yuma or hi Angela" 
+<li><b>&</b><li> meaning that both word are require
+<li><b>,</b></li> meaning either one is require
+<li><b>func</b></li> let you specify which function you want to use. Here we are using the function speak because we want the system to speak back to us.
+<li><b>param</b></li> is a parameter for the chosen function. Here we want the function speak to say "Hello, how are you?" when we say "hi Yuma or hi Angela" 
 <h6>Some Available Function:</h6>
-<b>show_help</b>: 
-<b>analyze</b>
+<li><b>show_help</b></li>
+<li><b>analyze</b></li>
 Example: "event,events&now": {
             func:"analyze",param_x:"events"
           },
           
-<b>change_location</b>
+<li><b>change_location</b></li>
  Example:   "about&page": {
             func:"change_location",param:"about",
         },
 
-<b>tell_time</b>
+<li><b>tell_time</b></li>
   Example:     "what&time&is&it":{
                 func:"tell_time",param:false,
               },
-<b>tell_weather</b>
+<li><b>tell_weather</b></li>
   Example: "tell,say,how&weather":{
                   func:"tell_weather",param:"x",
             },
-<b>get_class</b>
+<li><b>get_class</b></li>
 Example: "class,course":{
                 func:"get_class",param:"x",
            },
-<b>get_location</b>
+<li><b>get_location</b></li>
 Example:    "where's":{
                 func:"get_location",param:"x",
             },
-<b>go_back</b>
+<li><b>go_back</b></li>
 Example: "go&back": {
             func:"go_back",param:false,
           },
-<b>say_user_name</b>
+<li><b>say_user_name</b></li>
 Example:  "my&name":{
             func:"say_user_name",param:"my name is lassana",
            },
@@ -68,5 +68,5 @@ In the feature ,Robot Helper will be able to do the following:
 
 
 <center><h1>Contributing</h1> </center> 
-Lassana Konate
-Mattew Alexamder
+<li>Lassana Konate</li>
+<li>Mattew Alexamder</li>
