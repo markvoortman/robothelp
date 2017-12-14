@@ -13,9 +13,9 @@ Robot Helper can do the following, so far:
 <li>Respond to Some Greeting </li>
 
 <center><h1>Usage</h1> </center> 
-Robot helper is a work in progress. Consequently, it is not that easy for others developers to sinply add new feature to it unless to understand the logic of its Algorithm. We are still working on that!
-However, developers can easily add new conversations by modifying a file call process.js
-Example: to add a conversation when user say hi Yuma or hi Angela, add this line to the questions object, inside process.js
+Robot helper is a work in progress. Consequently, it is not that easy for others developers to sinply add new feature to it unless they understand the logic of its Algorithm. We are still working on that!
+However, developers can easily add new conversations by modifying a file called process.js.
+Example: to add a conversation when users say hi Yuma or hi Angela, the developer needs to add this line to the questions object inside process.js
 "hi&yuma,angela":{
    func:"speak",param:"Hello, how are you?",
 },
@@ -61,16 +61,16 @@ Example:  "my&name":{
            },
 <center><h1>Voice Recognition Analytic </h1> </center> 
 <h6>Problem</h6>
-Building a voice assistant is not simple as it seems. As a Computer scientist said, Computer is the dumbest thing. A person need to tell a computer what to do, how to do it, and when do it, step by step with all details.
-The problem with voice recognition is that you never know what user are going to say, when they are going to say it, and how they are going to say it.
+Building a voice assistant is not simple as it seems. As Bill Bryson said, “A computer is a stupid machine with the ability to do incredibly smart things, while computer programmers are smart people with the ability to do incredibly stupid things.”
+A person needs to tell a computer what to do, how to do it, and when to do it, step by step with all the details.
+The problem with voice recognition is that you never know what users are going to say, when they are going to say it, and how they are going to say it.
 <h6>Solution</h6>
-One solution was to apply some data Analytic to get a meaning of what user may say to Robot Helper.
-for an easy Example there are many ways you can ask for a class. "show my class business Law", "display business law class", "class business law", "find business law class", "find my business Law Class" ,"show business law". each one of these Phrase will make sense to a person. however, the computer does not understand none of these Phrases. The solution was to find at least some keywords, that no matter what, when user are asking about a class, will be always there. here the word show, class and business is showing in almost all of them. Now Robot Helper may assume that when there is a word show with class, users is most likely talking about a class. After assuming, robot Helper will go and check in all available classes. if the name of any class appear in what users said. RoBot Helper is now confident that user is asking about a class. Consequently, information about the class will be display if there is only one macth. However if there is more class that macth what user is asking, Robot helper will display some options, where users can choose from. 
-<h6>Problem</h6>
+One solution was to apply some Data Analytic to get a meaning of what users may say to Robot Helper.
+For an easy example there are many ways a person can ask for a class. i.e. "show my class business law", "display business law class", "class business law", "find business law class", "find my business law class" ,"show business law". Each one of these phrases will make sense to a person; however, the computer does not understand any of these phrases. The solution was to find at least some keywords, when users are asking about a class, will be always there. Here the word 'show', 'class', and 'business' are showing in most of them. Now Robot Helper may assume that when there is a word 'show' with a word 'class', a user is most likely talking about a class. After assuming that the user is looking for a class, Robot Helper will go and check in all available classes. If the name of any class appears in what the user said. Robot Helper is now confident that the user is asking about a class. Consequently, information about the class will be displayed if there is only one match. However if  there are more matches, Robot helper will display some options where the user can choose from. 
 
 <center><h1>What's next </h1> </center> 
 In the feature ,Robot Helper will be able to do the following:
-<li>Give Information about Point Park Bus Schedules</li>
+<li>Give information about Point Park Bus Schedules</li>
 <li>Tell Students About their Homework</li>
 <li>Walk around Campus and Intearct with people</li>
 <li>and more...<li>
