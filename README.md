@@ -75,7 +75,6 @@ In the feature ,Robot Helper will be able to do the following:
 <li>Walk around Campus and Intearct with people</li>
 <li>and more...<li>
 
-
 <center><h1>Contributing</h1> </center> 
 <li>Lassana Konate</li>
 <li>Mattew Alexamder</li>
