@@ -59,6 +59,15 @@ Example: "go&back": {
 Example:  "my&name":{
             func:"say_user_name",param:"my name is lassana",
            },
+<center><h1>Voice Recognition Analytic </h1> </center> 
+<h6>Problem</h6>
+Building a voice assistant is not simple as it seems. As a Computer scientist said, Computer is the dumbest thing. A person need to tell a computer what to do, how to do it, and when do it, step by step with all details.
+The problem with voice recognition is that you never know what user are going to say, when they are going to say it, and how they are going to say it.
+<h6>Solution</h6>
+One solution was to apply some data Analytic to get a meaning of what user may say to Robot Helper.
+for an easy Example there are many ways you can ask for a class. "show my class business Law", "display business law class", "class business law", "find business law class", "find my business Law Class" ,"show business law". each one of these Phrase will make sense to a person. however, the computer does not understand none of these Phrases. The solution was to find at least some keywords, that no matter what, when user are asking about a class, will be always there. here the word show, class and business is showing in almost all of them. 
+<h6>Problem</h6>
+
 <center><h1>What's next </h1> </center> 
 In the feature ,Robot Helper will be able to do the following:
 <li>Give Information about Point Park Bus Schedules</li>
