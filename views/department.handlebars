@@ -1,0 +1,28 @@
+
+
+
+{{#if data.isMatched}}
+    <h1>Location </h1>
+    <h2  >{{data.title.Department}}</h2>
+    <br>
+    <h2 id='department' data-value='{{data.title.location}}'>{{data.title.location}}</h2>
+    <script type="text/javascript">
+
+    var s = $("#department")[0].dataset.value;
+    engine.speak(" ","yes",function(){
+      engine.speak("the location is "+s);
+    });
+
+    </script>
+    {{else}}
+    <script type="text/javascript">
+    engine.speak(" ","yes",function(){
+      engine.speak("which one ","yes");
+    });
+    engine.context.context = "location";
+    engine.context.data = false;
+    </script>
+    {{#each data.candidates}}
+    <li>{{this.Department}}</li>
+  {{/each}}
+  {{/if}}

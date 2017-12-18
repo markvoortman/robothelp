@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Lassana konate</title>
+  </head>
+  <body>
+    <img id='image'src="img/book.png" alt="">
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="crossorigin="anonymous"></script>
+    <script type="text/javascript">
+     //  function checkThem(x,targets){
+     //    var phrase = x.toLowerCase().replace(/'s|!|.|/gi,"").split(" ");
+     //    console.log(x.replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,""));
+     //    var findings ={};
+     //    for(var i =0; i< targets.length; i++){
+     //         findings[targets[i]]= false;
+     //      for(var j =0; j< phrase.length; j++){
+     //        var target =targets[i].toLowerCase();
+     //        if(target === phrase[j] || target+"s" === phrase[j]){
+     //          findings[target] = true;
+     //        }
+     //      }
+     //      if( findings[target]=== false){
+     //        return false;
+     //      }
+     //    }
+     //    return true;
+     //  }
+     // var phrase = "~``~`:;' smilling a good day to have a good day, inspiration and Motivation men's , basketball.?@ #$%^&*()_-+=[]{}/|\"ko\"hh\\\ ";
+     //  console.log(checkThem(phrase,["inspiration","motivation","men","basketball"]));
+     //  //console.log(check(phrase,"love"));
+     //
+     //  var d = phrase.replace(/|(function(x){
+     //    console.log(x);
+     //    return x.length===3;
+     //  })|/gi,"");
+     //  console.log("phrase",d);
+
+
+
+      function getBLob(){
+
+          var img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = function() {
+            var canvas = document.createElement('CANVAS');
+            var ctx = canvas.getContext('2d');
+            var dataURL;
+            canvas.height = this.naturalHeight;
+            canvas.width = this.naturalWidth;
+            ctx.drawImage(this, 0, 0);
+            dataURL = canvas.toDataURL(outputFormat);
+            callback(dataURL);
+          };
+          img.src = "img/book.png";
+          
+      }
+      getBLob();
+
+     //
+     //  function getDataUri(url, callback) {
+     //    var image = new Image();
+     //     image.onload = function () {
+     //
+     //          var canvas = document.getElementById('canvas');
+     //          canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
+     //          canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
+     //
+     //          canvas.getContext('2d').drawImage(this, 0, 0);
+     //
+     //          // Get raw image data
+     //          callback(canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, ''));
+     //
+     //          // ... or get as Data URI
+     //        //callback(canvas.toDataURL('image/png'));
+     //     };
+     //    image.crossOrigin="Anonymous";
+     //     image.src = url;
+     // }
+
+        // Usage
+      // getDataUri('img/book.png', function(dataUri) {
+      //  console.log(dataUri);
+      // });
+
+
+    </script>
+  </body>
+</html>

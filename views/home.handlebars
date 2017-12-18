@@ -1,1 +1,93 @@
-<h1>Home</h1>
+<div id="Home_mainContainer2" style=' width:90%; height:500px; margin:0 auto; position: relative; '></div>
+<script type="text/javascript">
+engine.speak(" ");
+engine.listen();
+engine.context.current_page = "home";
+engine.context.current_context = "normal";
+engine.context.example = (engine.context.context ==="listen_my_name"? "EX. Say \" activate!  \"":"EX. Say \" Location\"");
+var sentences =[{},{
+  question:"Angela, Where is the playhouse?" ,ask: "location" },
+  {question:"Angela, Show all the locations ", ask: "Event" },
+  {question:"Angela, Show all the courses ", ask: "Event" },
+  {question:"Angela, What are the events on campus today?", ask: "Event" },
+  {question:"Angela, Show all office hours", ask: "teacher/class," },
+  {question:"Angela, Show Angela's office hours", ask: "teacher/class," },
+  {question:"Angela, Show me Somewhere to eat", ask: "Event" },
+  {question:"Angela, Show me Somewhere to run", ask: "Event" },
+  {question:"Angela, Show me Somewhere to Workout", ask: "Event" },
+  {question:"Angela, What are the events on campus Tomorrow?", ask: "Event" },
+  {question:"Angela, What are the events on campus?", ask: "Event" },
+  {question:"Angela, What are the events on December 13th?", ask: "Event" },
+  {question:"Angela, Show my class \'Business Law\'", ask: "Event" },
+  {question:"Angela, Show my class \'Accounting\'", ask: "teacher/class," },
+  {question:"Angela, I have a suggestion to add about Angela", ask: "teacher/class," },
+  {question:"Angela, Go back", ask: "Event" },
+  // {question:"Scroll down", ask: "Event" },
+  // {question:"Scroll up", ask: "Event" },
+  // {question:"Scroll to the bottom ", ask: "Event" },
+  // {question:"Scroll to the Top", ask: "Event" },
+];
+var queston_head = $("<div class='b' style='position:absolute; width:100%; top:400px;  margin:0 auto; text-align:center; font-size:1.2em; color:white; border-radius:100px;'>Somethings You Can Ask Me</div>");
+$("#Home_mainContainer2").append(queston_head);
+queston_head.animate({
+      top: "0px"
+    }, 1000, function() {
+      // Animation complete.
+    });
+
+
+function animation(){
+  if($("#optionField").length<=0){
+    var options = $("<div class='options' id='optionField' style=' text-align:center; width:100%; height:700px;  overflow:scroll; position: relative; margin:0 auto; text-align:center; '></div>");
+    $("#Home_mainContainer2").append(options);
+  }
+
+  var i=1;
+  var interval= setInterval(function(){
+    if(sentences[i]){
+          var p = $("<p class='b' id='"+i+"' style='border-radius:100px; position:absolute; width:100%; top:400px;  margin:0 auto; text-align:center; ' data-ask ='"+sentences[i].ask+"'>"+sentences[i].question+"<br></p>");
+      $("#optionField").append(p);
+      p.animate({
+          top: ""+(i*50)+"px"
+        },300, function() {
+
+          $(this).find("span").fadeIn();
+          // $(this).append("<br><span style='font-size:0.8em; color:lightblue;'>Say \""+this.dataset.ask+"\"</span>");
+          // Animation complete.
+        });
+    }else {
+      clearInterval(interval);
+      //$( "#speechBtn" ).trigger( "click" );
+      setTimeout(function(){clear();},5000);
+    }
+    i++;
+  },1000);
+}
+animation();
+function clear(){
+  var i =0;
+  var interval= setInterval(function(){
+    if($($(".options p")[i])){
+      $($(".options p")[i]).animate({
+          top:(Math.floor((Math.random() * 2) + 1) ===1?"-10px":"300px" ),
+          left:(Math.floor((Math.random() * 2) + 1) ===1?"300px":"-300px" )
+        }, 1000, function() {
+          // Animation complete.
+          $(this).fadeOut();
+          if(parseInt($(this)[0].id)===sentences.length - 1){
+              setTimeout(function(){
+              $(".options p").remove();
+               animation();
+             },100);
+          }
+        });
+    }else {
+      clearInterval(interval);
+      //setTimeout(function(){clear();},3000);
+    }
+    i++;
+  },300);
+}
+
+
+</script>

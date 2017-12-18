@@ -1,0 +1,150 @@
+{{#if data}}
+   {{#if found}}
+   <script type="text/javascript">
+       console.log("welcome to the course section");
+       engine.speak("no course found");
+       engine.beep();
+       engine.context.context = "courses";
+       engine.context.current_context = "courses";
+       engine.context.flash_message ="Tell me the course name"
+       engine.context.example = "EX. Say \" Course marketing \"";
+       engine.context.data = false;
+   </script>
+   {{#if teachers}}
+   <table>
+     <tr>
+       <td><h5>Course:</h5></td>
+       <td><h6>{{course}}</h6></td>
+     </tr>
+   </table>
+   <center><h5>Teachers Found</h5><center>
+   <table  style="width:100%;">
+     <tr><th>Index</th> <th>First Name</th>  <th>Last Name</th>  <th>Email</th>  <th>Office Address</th></tr>
+     {{#each teachers}}
+     <tr><td> -</td> <td>{{this.teacher.firstName}}</td> <td> {{this.teacher.lastName}}</td> <td> {{this.teacher.email}}</td> <td> {{this.teacher.officeAddress}}</td> </tr>
+     {{/each}}
+   </table>
+   {{/if}}
+   {{#if find_course}}
+   <center><h5>Courses</h5></center>
+   <div class="course_scroll" style="max-height:500px; overflow:scroll;">
+     <table  style="width:100%;">
+       {{#each find_course}}
+       <tr><td>{{this.find_course.name}}</td>  </tr>
+       {{/each}}
+     </table>
+   </div>
+
+   {{/if}}
+   {{else}}
+   <script type="text/javascript">
+   console.log("welcome to the course section");
+    engine.speak("no course found");
+    engine.beep();
+   engine.context.context = "courses";
+   engine.context.current_context = "courses";
+   engine.context.flash_message ="Tell me the course name"
+    engine.context.example = "EX. Say \" Course marketing \"";
+   engine.context.data = false;
+   </script>
+      <h6>Sorry no answer for course "{{course}}"</h6>
+   {{/if}}
+
+
+
+
+{{else}}
+<div id="Home_mainContainer2" style=' width:90%; height:500px; margin:0 auto; position: relative; '></div>
+<script type="text/javascript">
+console.log("welcome to the course section");
+ engine.speak("welcome to the course section");
+ engine.beep();
+engine.context.context = "courses";
+engine.context.current_context = "courses";
+  engine.context.flash_message ="Tell me the course name"
+   engine.context.example = "EX. Say \" Course marketing \"";
+engine.context.data = false;
+// engine.speak(" ","yes",function(){
+//   //engine.speak("what location are you looking for?");
+// });
+var sentences =[{},{question:"What subject your teacher teaches?" ,ask: "Introduction to Sport, Arts and Entertainment" },{question:"", ask: "Principle of marketing" },{question:"", ask: "Career Preparation" },{question:"", ask: "Organization Studies and Ethical Considerations" },{question:"", ask: "Introductory Accounting II " } ];
+var queston_head = $("<div id='' style='position:absolute; width:100%; top:400px;  margin:0 auto; text-align:center; font-size:1.2em; color:grey; color:grey;'>Don't know exactly the teacher you are looking for?</div>");
+$("#Home_mainContainer2").append(queston_head);
+queston_head.animate({
+      top: "0px"
+    }, 1000, function() {
+      // Animation complete.
+    });
+
+
+function animation(){
+  if($("#optionField").length<=0){
+    var options = $("<div class='options' id='optionField' style=' text-align:center; width:100%; height:590px; overflow:scroll; position: relative; margin:0 auto; text-align:center; '></div>");
+    $("#Home_mainContainer2").append(options);
+  }
+
+  var i=1;
+  var interval= setInterval(function(){
+    if(sentences[i]){
+          var p = $("<p id='"+i+"' style='position:absolute; width:100%; top:400px;  margin:0 auto; text-align:center; ' data-ask ='"+sentences[i].ask+"'>"+sentences[i].question+"<br><span style='font-size:0.8em; color:grey; display:none;'>Ex: \""+sentences[i].ask+"\"</span></p>");
+      $("#optionField").append(p);
+      p.animate({
+          top: ""+(i*50)+"px"
+        },700, function() {
+
+          $(this).find("span").fadeIn();
+          // $(this).append("<br><span style='font-size:0.8em; color:lightblue;'>Say \""+this.dataset.ask+"\"</span>");
+          // Animation complete.
+        });
+    }else {
+      clearInterval(interval);
+      //$( "#speechBtn" ).trigger( "click" );
+      setTimeout(function(){clear();},30000);
+    }
+    i++;
+  },1000);
+}
+animation();
+function clear(){
+  var i =0;
+  var interval= setInterval(function(){
+    if($($(".options p")[i])){
+      $($(".options p")[i]).animate({
+          top:(Math.floor((Math.random() * 2) + 1) ===1?"-10px":"300px" ),
+          left:(Math.floor((Math.random() * 2) + 1) ===1?"300px":"-300px" )
+        }, 1000, function() {
+          // Animation complete.
+          $(this).fadeOut();
+          if(parseInt($(this)[0].id)===sentences.length - 1){
+              setTimeout(function(){
+              $(".options p").remove();
+               animation();
+             },100);
+          }
+        });
+    }else {
+      clearInterval(interval);
+      //setTimeout(function(){clear();},3000);
+    }
+    i++;
+  },300);
+}
+// function getTeachers(course){
+//   $.ajax({
+//       url: "/get-teachers",
+//       type: 'POST',
+//       data: {course:course},
+//       success: function(data){
+//           if(data.success){
+//             console.log("teachers ",data.success);
+//           }else{
+//            }
+//       },
+//       error: function(){
+//          console.log("error");
+//        }
+//  });
+// }
+// getTeachers("Career Preparation");
+{{/if}}
+</script>

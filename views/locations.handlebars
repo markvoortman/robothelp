@@ -1,0 +1,246 @@
+{{#if location}}
+    {{#if location.isMatched}}
+        <center><h1>&#x1f505;</h1></center>
+        <center><h6 class='b' >"{{location.title.department}}" </h6></center>
+        <input type="hidden" class='text_data'name="Location" value="{{location.title.department}}">
+        <input type="hidden" class='text_data'name="Address" value="{{location.title.direction}}">
+        <center><h6><span class='b' style="color: White;">{{location.title.location}}</span></h6></center>
+        <input id='direction-input' type="hidden" name="" value="{{location.title.direction}}">
+        <br>
+        <div  class="b" id="map" style="width:100%;height:500px"></div>
+         <!-- <img src="img/map.jpg" alt=""> -->
+           <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqylB1Mb_Zt8JSxi-H81UevayUhElgbPQ"></script>
+        <script type="text/javascript">
+        var map;
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+             getAdressLong(pos);
+          }, function() {
+          //  handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+        //  handleLocationError(false, infoWindow, map.getCenter());
+        }
+
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        // infoWindow.setPosition(pos);
+        // infoWindow.setContent(browserHasGeolocation ?
+        //                       'Error: The Geolocation service failed.' :
+        //                       'Error: Your browser doesn\'t support geolocation.');
+        // infoWindow.open(map);
+      }
+
+        function getAdressLong(current_adress){
+          console.log($("#direction-input").val());
+          var geocoder = new google.maps.Geocoder();
+          var address = $("#direction-input").val();
+          geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+              var latitude = results[0].geometry.location.lat();
+              var longitude = results[0].geometry.location.lng();
+              //console.log(latitude, longitude);
+              myMap(current_adress,{lat:latitude,lng:longitude});
+              }
+          });
+        }
+          function myMap(current_adress,target) {
+             var bounds  = new google.maps.LatLngBounds();
+            var mapCanvas = document.getElementById("map");
+            var myCenter =  new google.maps.LatLng(target.lat,target.lng);
+            bounds.extend(myCenter);
+            var myLocation =new google.maps.LatLng(current_adress.lat,current_adress.lng);
+            bounds.extend(myLocation);
+            var d= getDistanceFromLatLonInKm(target.lat,target.lng,current_adress.lat,current_adress.lng)*0.621371;
+            engine.speak((Math.floor(d)<=0?"you are less than a mile away":"you are about "+Math.floor(d)+" miles away"));
+            var mapOptions = {
+              center: myCenter,
+            //  zoom:(Math.floor(d)>0?Math.abs(18-(Math.floor(d)*2)):18),
+              mapTypeId:google.maps.MapTypeId.HYBRID,
+              //disableDefaultUI: true,
+               heading: 90,
+               tilt: 45
+            };
+             map = new google.maps.Map(mapCanvas,mapOptions);
+             map.fitBounds(bounds);
+             map.panToBounds(bounds);
+            //map.setTilt(10);
+            function rotate90() {
+              var heading = map.getHeading() || 0;
+                console.log("r",heading);
+              map.setHeading(heading + 45);
+            }
+
+            function autoRotate() {
+              // Determine if we're showing aerial imagery.
+              if (map.getTilt() !== 0) {
+                window.setInterval(rotate90, 1000);
+              }
+            }
+            //autoRotate() ;
+            var marker = new google.maps.Marker({
+              position: myCenter,
+              animation: google.maps.Animation.BOUNCE
+            });
+           marker.setMap(map);
+
+           var marker_myLocation = new google.maps.Marker({
+             position: myLocation,
+             //icon:'img/markicon.png',
+             //animation: google.maps.Animation.BOUNCE
+           });
+          marker_myLocation.setMap(map);
+        var myCity = new google.maps.Circle({
+           center: myLocation,
+           radius: 30,
+           strokeColor: "#0000FF",
+           strokeOpacity: 0.8,
+           strokeWeight: 2,
+           fillColor: "#0000FF",
+           fillOpacity: 0.4
+         });
+        myCity.setMap(map);
+
+          var infowindow = new google.maps.InfoWindow({
+            content: "<span style='color:green;'>You are here somewhere </span>",
+          });
+          infowindow.open(map,marker_myLocation);
+
+          var flightPath = new google.maps.Polyline({
+            path: [myLocation, myCenter],
+            strokeColor: "#0000FF",
+            strokeOpacity: 0.8,
+            strokeWeight: 5,
+          });
+          flightPath.setMap(map);
+          }
+
+         engine.speak(" ");
+           displayCanSay({options:["To Text You the Address"],title:"Ask Me!"});
+         engine.context.current_context = "location";
+         engine.context.flash_message ="Tell me the location please"
+         engine.context.context = "location";
+         engine.context.example = "EX. Say \" Where is Admission \"";
+        </script>
+
+        {{else}}
+        <script type="text/javascript">
+        engine.context.context = "location";
+        engine.context.current_context = "location";
+        engine.context.example = "EX. Say \" Where is Admission \"";
+        engine.context.flash_message ="Tell me the location please"
+        engine.context.data = false;
+        </script>
+        {{#if location.candidates}}
+        <center><h3>Result</h3></center>
+        <div class="location_scroll" style="max-height:700px; overflow:scroll;">
+          <table class="b"style="width:100%;">
+            <tr style='color:grey;'>
+              <td style='color:white;' >Number</td>
+              <td><center style='color:white;'>Locations</center></td>
+            </tr>
+            {{#each location.candidates}}
+            <tr>
+              <td style="font-size:0.8em;color:pink; " class='course_index' data-index="{{@index}}" data-target="location" data-name="{{this.department}}">{{@index}}</td><td style="font-size:0.8em;">{{this.department}}</td>
+            </tr>
+          {{/each}}
+          </table>
+        </div>
+        <script type="text/javascript">
+          //  engine.stopRec();
+          engine.speak(" ");
+
+            displayCanSay({options:["The Index Number of the Location to Display More. EX. Say Number 1!"],title:"Tell Me!"});
+
+        </script>
+        {{else}}
+        <center><h3>No Locations Found</h3></center>
+        <script type="text/javascript">
+          engine.speak(" ");
+        </script>
+        {{/if}}
+
+      {{/if}}
+
+{{else}}
+<div id="Home_mainContainer2" style=' width:90%; height:500px; margin:0 auto; position: relative; '></div>
+<script type="text/javascript">
+engine.speak(" ");
+
+engine.context.current_page = "location";
+engine.context.current_context = "location";
+engine.context.flash_message ="Tell me the location please"
+engine.context.example = "EX. Say \" Where is Admission \"";
+engine.context.context = "location";
+engine.context.data = false;
+
+
+var sentences =[{},{question:"Explain to me, I will guide you!" ,ask: "somewhere they make ID" },{question:"", ask: "somewhere I can have access to a computer" },{question:"", ask: "I need somewhere to eat" },{question:"", ask: "somewhere I can buy some Point park items" },{question:"", ask: "somewhere they to repair laptop " } ];
+var queston_head = $("<div id='' style='position:absolute; width:100%; top:400px;  margin:0 auto; text-align:center; font-size:1.2em; color:grey; color:grey;'>Don't know exactly where you going?</div>");
+$("#Home_mainContainer2").append(queston_head);
+queston_head.animate({
+      top: "0px"
+    }, 1000, function() {
+      // Animation complete.
+    });
+
+
+function animation(){
+  if($("#optionField").length<=0){
+    var options = $("<div class='options' id='optionField' style=' text-align:center; width:100%; height:590px; overflow:scroll; position: relative; margin:0 auto; text-align:center; '></div>");
+    $("#Home_mainContainer2").append(options);
+  }
+
+  var i=1;
+  var interval= setInterval(function(){
+    if(sentences[i]){
+          var p = $("<p id='"+i+"' style='position:absolute; width:100%; top:400px;  margin:0 auto; text-align:center; ' data-ask ='"+sentences[i].ask+"'>"+sentences[i].question+"<br><span style='font-size:0.8em; color:grey; display:none;'>Ex: Say \""+sentences[i].ask+"\"</span></p>");
+      $("#optionField").append(p);
+      p.animate({
+          top: ""+(i*50)+"px"
+        },700, function() {
+
+          $(this).find("span").fadeIn();
+          // $(this).append("<br><span style='font-size:0.8em; color:lightblue;'>Say \""+this.dataset.ask+"\"</span>");
+          // Animation complete.
+        });
+    }else {
+      clearInterval(interval);
+      //$( "#speechBtn" ).trigger( "click" );
+      setTimeout(function(){clear();},30000);
+    }
+    i++;
+  },1000);
+}
+animation();
+function clear(){
+  var i =0;
+  var interval= setInterval(function(){
+    if($($(".options p")[i])){
+      $($(".options p")[i]).animate({
+          top:(Math.floor((Math.random() * 2) + 1) ===1?"-10px":"300px" ),
+          left:(Math.floor((Math.random() * 2) + 1) ===1?"300px":"-300px" )
+        }, 1000, function() {
+          // Animation complete.
+          $(this).fadeOut();
+          if(parseInt($(this)[0].id)===sentences.length - 1){
+              setTimeout(function(){
+              $(".options p").remove();
+               animation();
+             },100);
+          }
+        });
+    }else {
+      clearInterval(interval);
+      //setTimeout(function(){clear();},3000);
+    }
+    i++;
+  },300);
+}
+</script>
+{{/if}}

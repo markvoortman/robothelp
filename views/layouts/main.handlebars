@@ -4,16 +4,46 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>Actor Database</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-    {{#if showTests}}
-        <link rel="stylesheet" href="/vendor/mocha.css">
-    {{/if}}
+    <title>Robot-Help</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-2.0.2.min.js"> </script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+    <script src="https://code.jquery.com/jquery-2.0.2.min.js"> </script>
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script> -->
+    <script src="speech.js"></script>
+    <script src="brain.js"></script>
     <style media="screen">
+
+      body {
+          background: url("img/background.jpeg");
+          background-repeat: no-repeat;
+          background-size: cover;
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          }
+      body,  html {
+        position: relative;
+        min-height: 100%;
+      }
+
+        .b {
+         border: 1px solid black;
+         background: rgba(13,13,13,.6);
+         box-shadow: 0px 10px 50px black;
+         padding-top:5px;
+        }
+
           #speechBtn {
-            background-image: url("img/network.png");
-            background-size: contain;
-            background-color: lightgrey;
+          /*background-image: url("img/atom.gif");*/
+            /*background-size: contain;
+            background-color: black;*/
           }
           #sentencesSpan{
             color:lightblue;
@@ -27,373 +57,1402 @@
           .table_bottom_border td {
             border-bottom: 1px solid lightgrey;
           }
+
+          tr:nth-child(even) {background-color: rgba(70,70,70,0.4)}
+
+          #render_are{
+          /* //  background-image: url('img/green.jpeg'); */
+          }
     </style>
   </head>
   <body style='background-color:black; color:white;'>
-    <!-- Header -->
-    <div class="header">
-      <div class=""><img src="img/logo.jpg" alt="" style="width:300px;">  </div>
-    </div>
     <!-- Body -->
-    <div class="mainContainer1" style=' width:30%; height:700px; float:left; border:1px solid lightblue; '>
-      <div class="" id='speechField' style=" width:100%; height:100px;line-height:100px; text-align:center; margin:0 auto;"></div>
-      <div class="">
-        <div id='speechBtn' style=' cursor:pointer; width:100px; height:100px; border-radius:100%;  line-height:100px; text-align:center; margin:0 auto; margin-top:30px;'></div>
-        <div class="" id='textField1' style=" text-align:center;">Hi there, I am lovely</div>
-        <div class="" id='textField2' style=" text-align:center;"><h3 style="color:grey;">Something you can ask me</h3></div>
-        <div class="" id='optionField' style=" text-align:center; height:390px; overflow:scroll; "></div>
-      </div>
-    </div>
-    <div id="mainContainer2" style=' width:69%; height:700px; float:right; border:1px solid lightblue;'>
-        {{{body}}}
-    </div>
-      <!-- Footer -->
+    <div class="mainContainer" style='  width:100%;  margin:0 auto; '>
+        <!-- <div class="" style=' border-bottom:1px solid grey; width:100%;'>
+            <audio class="audioDemo" controls preload="none" style="display:none;">
+               <source src="beep.mp3" type="audio/mpeg">
+            </audio>
 
-        {{#if showTests}}
-              <div id="mocha"></div>
-              <script src="/vendor/mocha.js"></script>
-              <script src="/vendor/chai.js"></script>
-              <script>
-                 mocha.ui('tdd');
-                 var assert = chai.assert;
-             </script>
-             <script src="/qa/test-global.js"></script>
-             {{#if pageTestScript}}
-                <script src="{{pageTestScript}}"></script>
-             {{/if}}
-             <script>mocha.run();</script>
-      {{/if}}
-      <script src="//code.jquery.com/jquery-2.0.2.min.js"> </script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-      <script type="text/javascript">
-      var spoken = false;
-      var context={context:"normal", data:"false"};
-      var sentences =["Where my class is located","who is my teacher","tell me my teacher office hour","what time is my class","What events on campus today","what is the last day to drop or add class","what time the shutle will be here", "where is my teacher office"];
-      var r = document.getElementById("speechField");
-      //var r0 = document.getElementById("result0");
-      var info = document.getElementById("speechBtn");
-      var optionField = document.getElementById("optionField");
-      for(var i =0; i< sentences.length; i++){
-        optionField.innerHTML += "<p id='sentencesSpan'>"+sentences[i]+"</p>"+"<br>";
-      }
-      startIt();
-          function startIt(){
-           //ecoute=true;
-          // if(sound){
-          //   soundIt();
-          // }
+            <div id='speechBtn' style=' cursor:pointer; width:50px; height:50px; border-radius:100%;  line-height:50px; text-align:center; margin:0 auto;'>
+             <img src="img/atom.gif" alt="" style="width:inherit; height:inherit;">
+            </div>
+            <div class="" id='textField1' style=" text-align:center;  height:30px;">Hi there!</div>
+            <div class="" id='textField2' style=" text-align:center; font-size:0.8em; color: grey; height:30px;"></div>
 
-          var recognition = new webkitSpeechRecognition();
-          recognition.lang ='en-US';//'en-US';'fr-FR'
-          recognition.interimResults = true;
-          //recognition.continuous = true;
-          var finalTrans ='';
-          info.addEventListener("click",function(){
-            finalTrans ='';
-           r.innerHTML="";
-           recognition.start();
-           spoken = false;
+        </div> -->
+
+        <div id="mainContainer2" style=' width:100%;'>
+            <div class="row" style=' width:100%;'>
+              <div class="col-md-3 b" id='conversation' style="position:relative;  min-height:700px;">
+                <div id="conversation0" style=" min-height:400px;">
+                  <div class="" style=' width:100%; height:150px;  '>
+                      <audio class="audioDemo" controls preload="none" style="display:none;">
+                         <source src="beep.mp3" type="audio/mpeg">
+                      </audio>
+
+                      <div id='speechBtn' style=' cursor:pointer; width:50px; height:50px; border-radius:100%;  line-height:50px; text-align:center; margin:0 auto;'>
+                       <img src="img/atom.gif" alt="" style="width:inherit; height:inherit;">
+                      </div>
+                      <div class="" id='textField1' style=" text-align:center;  height:30px;">Hi there!</div>
+                      <!-- <div class="" id='textField2' style=" text-align:center; font-size:0.8em; color: grey; height:30px;"></div> -->
+
+                  </div>
+                  <center>Conversation</center>
+                  <div id="current_context" style="font-size:0.9em; text-align:center; color:pink;"></div>
+                  <div id="saying" style="font-size:0.7em;"></div>
+                  <div id="system" style="font-size:0.7em;"></div>
+                  <div id="help" style="width: 600px; height:auto; position: absolute; top:100px; left:100%; border-right:3px solid pink;  background-color:rgb(10,10,10);z-index:3; display:none;">
+                    <center><h3>Help</h3></center>
+                    <center><h6 style="color:lightgrey">Things I can say</h6></center>
+                    <div id="help_list" style="width:100%; text-align:center; color:grey;">
+
+                    </div>
+                  </div>
+                </div>
+                <div class="canSay">
+                  <center id="title"></center>
+                  <center ><div id="list"></div></center>
+                </div>
+              </div>
+              <script src='voicerss-tts.min.js'></script>
+              <script src='phrases.js'></script>
+              <script src='process.js'></script>
+              <script type="text/javascript">
+              var all_locations,all_classes,faculty_hours,phone_number;
+              //speakSoftly("Welcome users");
+
+                //console.log("search ",window.location.pathname+window.location.search);
+              function setLocation(){
+                var pathname = window.location.pathname+window.location.search;
+                //alert(pathname);
+                var location = localStorage.location;
+                if(location){
+                  var array =[];
+                  array = array.concat(location);
+                  var lastLocation = location.split(",")
+                  //console.log("last location ",lastLocation[lastLocation.length-1]);
+                  //console.log("location ### ",lastLocation[lastLocation.length-1],pathname,lastLocation[lastLocation.length-1] === pathname);
+                  if(lastLocation[lastLocation.length-1] === pathname){
+                      //console.log("location alredy here");
+                    //  alert("location alredy here");
+                  }else {
+                    //console.log("pushing");
+                      array.push(pathname);
+                  }
+                  localStorage.setItem("location", array);
+                }else {
+                  localStorage.setItem("location", [pathname]);
+                }
+                console.log("local",localStorage.location);
+                //localStorage.setItem("location", []);
+              }
+              function clearLocation(){
+                console.log("location cleared");
+                localStorage.removeItem("location");
+              }
+              setLocation();
+            //clearLocation();
+              var user_name = false,suggestion=[],speaking=false,scroll_interval;
+              var r = document.getElementById("speechField");
+
+              var info = document.getElementById("speechBtn");
+              var days=["monday","tuesday","wednesday","thursday","friday","saturday","sunday",];
+              var months=["january","february","march","april","may","june"	,"july"	,"august",	"september",	"october",	"november","december"];
+              // var help={
+              //   "listen_my_name":["help","close","Activate!","Activate and find me a location/class or anevent"],
+              //   "location":["help","close","list ","Where is Financial Aid","scroll up/down","scroll continuously","scroll all way up/down","stop","find a location","find a Class ","who are you","what is your name","Go to the home/about page","thank you","do you know my name","what can you do"],
+              //   "courses" : ["help","close","list ","my class or course network security","scroll up/down","scroll continuously","scroll all way up/down","stop","find a location","find a teacher ","who are you","what is your name","Go to the home/about page","thank you","do you know my name",,"what can you do"],
+              //   "normal" : ["find a location","find a teacher ","who are you","what is your name","Go to the home/about page","thank you","do you know my name","what can you do"],
+              //   "events" : ["today","show all","Event on November 26th","find a location","find a class ","hi ","who are you","what is your name","Go to the home/about page","thank you","do you know my name","what can you do"],
+              // }
+              var help=[
+                "Angela, close Window -to close this help Panel ",
+                "Angela, List All locations",
+                "Angela, List All courses",
+                "Angela, Where is the library?",
+                "Angela, What are the events on campus?",
+                "Angela, events on December 16th?",
+                "Angela, who are you?",
+                "Angela, what is your name",
+                "Angela, Go to the home page",
+                "Angela, Go to the about page",
+                "Angela, thank you",
+                "Angela, do you know my name?",
+                "Angela, what can you do",
+                "Angela, Go back",
+              ];
+
+
+              speech.speech(false, result,audioStart, soundEnd,audioEnd,recognitionEnd, audioError,said,talking,doneSpeaking);
+              //system_speak(" ");
+              //engine.listen();
+              var finalTrans=false;
+              $("#speechBtn").click(function(){
+                engine.listen();
               });
-          //recognition.start();
-          //info.innerHTML="listening...";
-          // recognition.onsoundstart = function(){
-          //
-          // }
-
-
-          recognition.onresult = function(event) {
-
-            var interimTrans='';
-            for(var i =event.resultIndex; i<event.results.length; i++){
-              var trans = event.results[i][0].transcript;
-              trans.replace("\n", "<br>");
-              if(event.results[i].isFinal){
-                finalTrans= trans;
+              function talking(){
+                console.log("speaking@@@@@@");
+                speaking = true;
               }
-              else{
-                interimTrans=trans;
+              function doneSpeaking(){
+                console.log(".....done speaking@@@@@@");
+                finalTrans =false; //so it wont be an error
+                setTimeout(function(){
+                  speech.stopRec();
+                  finalTrans =""; //so it wont be an error
+                  speaking = false;
+                  //engine.beep();
+                  engine.listen();
+                },0);
+
               }
-            }
-            r.innerHTML = finalTrans+"<span style='color:red'> "+ interimTrans+"</span>";
-            //r0.innerHTML ="<span style='color:darkgrey'> "+ interimTrans+"</span>";
-             action(finalTrans);
-             //console.log("result");
-             spoken =true;
-          }
-          recognition.onaudiostart = function(){
-            $("#textField1").html("Yes, I am listening...");
-            $("#speechBtn").css({"background-color":"green"});
-            //console.log("audio starts");
-
-          }
-          recognition.onsoundend = function(){
-            //recognition.start();
-            //info.innerHTML="speak!";
-            $("#textField1").html("What can I do for you?");
-            //console.log("sound ends");
-
-          }
-          recognition.onaudioend = function(e) {
-            //console.log("audio ends");
-            $("#textField1").html("What can I do for you?");
-            $("#speechBtn").css({"background-color":"red"});
-            //console.log("capture2 ended");
-            if(spoken){
-              setTimeout(function(){
-                spoken = false;
-                finalTrans ='';
-                recognition.stop();
-                recognition.start();
-                //console.log("restarting")
-              }, 700);
-            }
-
-          }
-
-          recognition.onerror = function(event){
-            //console.log(event);
-            if(event.error==="no-speech"){
-
-              //speakIt("i did not hear anything!","yes");
-              //console.log(event.error);
-            }
-            $("#textField1").html("What can I do for you?");
-            // if(ecoute){
-            //   startIt();
-            // }else {
-            //   console.log("terminated");
-            //   ecoute=true;
-            // }
-          }
-
-          function speakIt(text,after){
-              console.log(recognition.stop());
-              var speech = new SpeechSynthesisUtterance();
-              speech.text= text;
-              speech.lang= "en-US";
-              speech.rate=1;
-              speech.voice = speechSynthesis.getVoices()[32];
-              speechSynthesis.speak(speech);
-              if(after === "yes"){
-                speech.onend= function(){
-                  console.log("speech ended");
-                  setTimeout(function(){
-                    spoken = false;
-                    finalTrans ='';
-                    try {
-                        recognition.start();
-                    } catch (e) {
-                      console.log("Errorrrrrrrrr..............");
-                    }
-                    console.log("restarting")
-                  }, 100);
-                 }
+              function recognitionEnd(event){
+               //console.log('disconnected');
+               count_wait = 0;
+               engine.listen();
               }
-              if(after === "music"){
-                speech.onend= function(){
-                  //soundIt("play");
-                  }
+              function said(x){
+                if(x.length>1){
+                    reply(x);
+                }
               }
-          }
 
-          function speakClass(theClass,context_data){
-            var class_name = classes[theClass].name;
-            var class_location = classes[theClass].location;
-            var class_day = classes[theClass].day;
-            var class_time = classes[theClass].time;
-            var teacher_name = classes[theClass].teacher.name;
-            var teacher_office = classes[theClass].teacher.office;
-            var teacher_hour = classes[theClass].teacher.hour;
-            var teacher_day = classes[theClass].teacher.day;
-            var text = "class "+ theClass+", titled "+class_name;
-            switch (context_data) {
-              case "find_class":
-                text+= ", is located on"+class_location;
-                text+= ", it is every "+class_day+" from "+class_time;
-                break;
-              case "find_teacher":
-                text+= (teacher_name? ", your teacher is "+teacher_name:"");
-                text+= (teacher_name && teacher_office? ", His office is located on "+teacher_office:"");
-                text+= (teacher_name && teacher_hour? ", His office hour  "+teacher_hour:"");
-                text+= (teacher_name && teacher_day? ", His office day  "+teacher_day:"");
-                break;
-              default:
+              function result(event){
+                if(!speaking){
 
-            }
-            speakIt(text,"yes");
-          }
-          function displayClassInfo(theClass,context_data){
-            var class_name = classes[theClass].name;
-            var class_location = classes[theClass].location;
-            var class_day = classes[theClass].day;
-            var class_time = classes[theClass].time;
-            var teacher_name = classes[theClass].teacher.name;
-            var teacher_office = classes[theClass].teacher.office;
-            var teacher_hour = classes[theClass].teacher.hour;
-            var teacher_day = classes[theClass].teacher.day;
-            var aDiv = $("<div  style='width:100%; margin:0 auto;'></div>");
-            var table =$("<table class='table_bottom_border' style='width:100%; background-color:white; color:grey;'></table>");
-            var tr1 = $("<tr><td class='customTitles'>Title</td><td>"+class_name+"</td></tr>");
-            var tr2 = $("<tr><td class='customTitles'>Location</td><td>"+class_location+"</td></tr>");
-            var tr3 = $("<tr><td class='customTitles'>Day</td><td>"+class_day+"</td></tr>");
-            var tr4 = $("<tr><td class='customTitles'>Time</td><td>"+class_time+"</td></tr>");
-            var tr5 = $("<tr><td class='customTitles'>Teacher</td><td>"+teacher_name+"</td></tr>");
-            var tr6 = $("<tr><td class='customTitles'>Office Location</td><td>"+teacher_office+"</td></tr>");
-            var tr7 = $("<tr><td class='customTitles'>Office Hour</td><td>"+teacher_hour+"</td></tr>");
-            var tr8 = $("<tr><td class='customTitles'>Day</td><td>"+teacher_day+"</td></tr>");
-            switch (context_data) {
-              case "find_class":
-                table.append(tr1,tr2,tr3,tr3,tr4);
-                break;
-              case "find_teacher":
-                table.append(tr5,tr6,tr7,tr8);
-                break;
-              default:
-
-            }
-            aDiv.append(table);
-            $("#mainContainer2").empty();
-            $("#mainContainer2").append(aDiv);
-          }
-
-          function action(x){
-            if(x.length >0){
-              setTimeout(function(){
-                switch (context.context) {
-                  case "normal":
-                  if (x.indexOf("what")!==-1 && x.indexOf("your")!==-1 && x.indexOf("name")!==-1) {
-                    speakIt("my name is lovely, what can i do for you?","yes");
-                  }
-                  else if(x.indexOf("hey")!==-1 && x.indexOf("lovely")!==-1 ){
-                    speakIt("hi!","yes");
-                  }
-                  else if(x.indexOf("stop")!==-1 && x.indexOf("listening")!==-1){
-                    speakIt("ok, i stopped listening");
-                  }
-                  else if((x.indexOf("class")!==-1 && (x.indexOf("located")!==-1 || x.indexOf("location")!==-1 )) || (x.indexOf("find")!==-1 && x.indexOf("class")!==-1)  ){ //Where my class is located
-                    speakIt("What is your class prefix?","yes");
-                    context.context= "class_location";
-                    context.data="find_class";
-                  }else if(x.indexOf("who")!==-1 &&  x.indexOf("teacher")!==-1){ //Where my class is located
-                    speakIt("What is your class prefix?","yes");
-                    context.context= "class_location";
-                    context.data="find_teacher";
-                  }
-                  else if(x.indexOf("thanks")!==-1 || (x.indexOf("thank you")!==-1) || x.indexOf("thank")!==-1){ //Where my class is located
-                    speakIt("it is my pleasure to help","yes");
-                  }
-                  else if(x.indexOf("who")!==-1 && x.indexOf("you")!==-1 ){ //Where my class is located
-                    speakIt("I am lovely","yes");
-                  }
-                  else if(x.indexOf("hi")!==-1  ){ //Where my class is located
-                    speakIt("I am lovely, how can I help","yes");
-                  }
-                  else {
-                    speakIt(x,"yes");
-                  }
-                    break;
-                  case "class_location":
-                      var classPrefix= x.replace(/ /g, '').toLowerCase();
-                      if(classes[classPrefix]){
-                        speakClass(classPrefix,context.data);
-                        displayClassInfo(classPrefix,context.data);
-                        //speakIt("class prefix, "+x+", is located in thayer hall, your teach name is Dr. Voortman ","yes");
-                        context.context = "normal";
-                        context.data = false;
-                      }else {
-                        speakIt("could not found your class, What is your class prefix? please type in the field","no");
-                        var aDiv = $("<div id='inputDiv' style='width:20%; margin:0 auto; margin-top:30px;'></div>");
-                        var input = $("<input type='text' name='' value=''  id='input1' style=' font-size:20px;'>");
-                        var button = $("<button type='button' name='button' id ='findClassBtn'>Find Class</button>");
-                        var table =$("<table></table>");
-                        var tr = $("<tr></tr>");
-                        var td1 = $("<td></td>");
-                        var td2 = $("<td></td>");
-                        tr.append(td1,td2);
-                        table.append(tr);
-                        td1.append(input);
-                        td2.append(button);
-                        aDiv.append(table);
-                        $("#mainContainer2").empty();
-                        $("#mainContainer2").append(aDiv);
-                        $("#input1").trigger( "focus" );
-                        $( "#input1" ).keypress(function(e){
-                          if(e.which === 13){
-                            event.preventDefault();
-                            $("#findClassBtn").trigger("click");
-                          }
-                        });
-                        button.click({input:input},function(e){
-                          if(context.context ==="class_location"){
-                              console.log(e.data.input.val());
-
-                              var classPrefix= e.data.input.val().replace(/ /g, '').toLowerCase();
-                              if(classes[classPrefix]){
-                                speakClass(classPrefix,context.data);
-                                displayClassInfo(classPrefix,context.data);
-                                context.context = "normal";
-                                context.data = false;
-                                aDiv.remove();
-                              }else {
-                                speakIt("could not found your class","no");
-                              }
-                          }
-                        });
+                  var interimTrans='';
+                  for(var i =event.resultIndex; i<event.results.length; i++){
+                    var trans = event.results[i][0].transcript;
+                    //console.log("trans ",trans);
+                    if(trans && trans.toLowerCase()==="angela"){
+                      if($("#angela0").length<=0){
+                        $("#conversation").append("<img id='angela0' src='img/angela0.png' style='position:absolute; bottom:0px; left:-10px; width:100px; height:100px;'></img>");
+                        $("#angela0").animate({
+                          left:"50%"
+                        },100);
                       }
-                      break;
-                  case "hhhh":
+                      pass= true;
+                      passExpired = 0;
+                    }
+                    trans.replace("\n", "<br>");
+                    if(event.results[i].isFinal){
+                      finalTrans= trans;
+                      //console.log("final", finalTrans, "contex: ", engine.context.context);
+                      $("#saying").html("<p><span style='color:pink;'>You said: </span>"+finalTrans+"</p>");
+                      $("#system").html("");
+                       analyze(finalTrans);
+                       //isAdjectives(finalTrans);
 
-                      break;
-                  default:
+                    }
+                    else{
+                      interimTrans=trans;
+                    }
+                  }
+                }
+              }
+
+              function audioStart(){
+                if(engine.context.context !=="listen_my_name"){
+                  $("#textField1").html("I am listening..."+ engine.context.flash_message);
+                  $("#speechBtn").css({"background-color":"rgba(100,100,100,0.4)"});
+                }
+              }
+
+              function soundEnd(event){
+                //console.log("soundEnd");
+                $("#textField1").html("I am Disactivated ");
+              }
+
+              function audioEnd(hasResponded,listening){
+                 $("#textField1").html("I am Disactivated ");
+                 $("#speechBtn").css({"background-color":"black"});
+              }
+              var no_speech_count =0;
+              function audioError(event){
+                if(event.error==="no-speech"){
+                  pass = false;
+                  no_speech_count++;
+                  if(no_speech_count > 100){
+                    clearLocation();
+                    console.log("locations cleared");
+                    //functions.disactivate(false);
+                    changedLocation("")
+                    no_speech_count = 0;
+                  }
+                }
+              }
+                var passExpired = 0;
+               var pass_time = setInterval(function(){
+                 passExpired+=1;
+                 if(passExpired >=10){
+                   pass =false;
+                   passExpired = 0;
+                 }
+               },1000);
+
+              var pass_count =0;
+              var count_wait = 0;
+              var time = setInterval(function(){
+                count_wait+=1;
+                console.log(count_wait);
+                if(pass && $("#angela0").length<=0){
+                  $("#conversation").append("<img id='angela0' src='img/angela0.png' style='position:absolute; bottom:0px; left:-10px; width:100px; height:100px;'></img>");
+                  $("#angela0").animate({
+                    left:"50%"
+                  },300);
+                }else if (!pass && $("#angela0").length>0) {
+                  $("#angela0").animate({
+                    left:"-10px"
+                  },300,function(){
+                      $("#angela0").remove();
+                  });
+                }
+                //console.log(passExpired, pass);
+                // if(pass){
+                //   pass_count+=1;
+                //   if(pass_count>6){
+                //     pass = false;
+                //     pass_count =0;
+                //   }
+                // }else {
+                //   pass_count =0;
+                // }
+                if(user_conversation){
+                  console.log(user_conversation,"----",system_conversation);
+
+                 //  $.ajax({
+                 //      url: "send-conversation",
+                 //      type: 'POST',
+                 //      data:{user:user_conversation ,system:system_conversation,recognized:(system_conversation?(system_conversation==="Angela did not understand"?false:true):false)},
+                 //      success: function(result){
+                 //          console.log(result);
+                 //      },
+                 // });
+                  user_conversation =false;
+                  system_conversation = false;
+                }
+              $("#textField2").html(engine.context.example);
+              context_description={
+                "listen_my_name":"Waiting to be activated! "+(user_name?user_name:""),
+                "location":"Waiting for a location! "+(user_name?user_name:""),
+                "courses" : "Waiting for a course name! "+(user_name?user_name:""),
+                "normal" : "How can I help! "+(user_name?user_name:""),
+                "events" : "Waiting for a time/date! "+(user_name?user_name:""),
+                "Help" : "Help Panel! "+(user_name?user_name:""),
+              };
+              $("#current_context").html(context_description[engine.context.context], engine.context.context);
+              },1000);
+              function setContext(context,data,message,example){
+                engine.context.context = context;
+                engine.context.current_context = context;
+                engine.context.flash_message =message
+                engine.context.example = example;
+                engine.context.data = data;
+              }
+              var pass = false;
+              var user_conversation = false;
+              var system_conversation = false;
+              function analyze(x,special_case,proc){ //send_text
+
+                user_conversation = false;
+                system_conversation = false;
+                var x = x.toLowerCase();
+
+
+
+
+
+
+                if(engine.context.context ==="user_name" || engine.context.context ==="send_text" || engine.context.context ==="suggestion" || (chech(x,["go"]) && chech(x,["back"])) || chech(x,["scroll"]) || chech(x,["stop"]) || pass){
+                  user_conversation = x;
+                  x=x.replace("angela","");
+                 }else {
+                     reply("Call me to activate, my name is \" Angela \"");
+                     return ;
+                 }
+
+                var m = sense.meaning(x.toLowerCase());
+                 var meaning = (m?m.descriptions[0]: false)
+                 if(meaning){
+                   //console.log("sense :",meaning.description, "reply",meaning.data);
+                   if(meaning.description ==='greeting'){
+                     system_speak(meaning.data.reply);
+                     return;
+                   }
+                 }
+                if(x.length >0){
+                  no_speech_count = 0;
+                    var sw =  (special_case?special_case:engine.context.context);
+                    switch (sw) {
+                      case "listen_my_name":
+                      if (x.indexOf("activat")!==-1) {
+
+                          var tex = x.replace(/activate/gi, "");
+                         if(tex.length<=1){
+                           system_speak("activated");
+                           engine.context.context = "normal";
+                           engine.context.data = false;
+                         }else {
+                           engine.context.context = "normal";
+                           engine.context.data = false;
+                           analyze(x.replace(/activate/gi, ""));
+                         }
+                      }
+                      else if(x.indexOf(engine.name)!==-1){ //Where my class is located
+                        system_speak("yes!, activate me first, so we can talk");
+                      }
+                      else {
+                        reply("please activate me first");
+                      }
+                        break;
+                        case "help":
+                        if (x.indexOf("close")!==-1 ) {
+                          system_speak("you're welcome! "+(user_name?user_name:""));
+                          $("#help").fadeOut("slow");
+                        }else {
+                           standard(x,"help");
+                        }
+                        break;
+                      case "normal":
+                           standard(x,"normal");
+                        break;
+                      case "office_hours":
+                        var r = isOfficeHoursRecognize(x);
+                        if(r){
+                          if(r.firstname && r.lastname){
+                            changedLocation("hours?firstname="+r.firstname+"&lastname="+r.lastname+"");
+                          }else {
+                            changedLocation("hours?firstname="+r.firstname+"");
+                          }
+                        }
+                        else if (x.indexOf("stop")!==-1 ) {
+                          engine.beep();
+                          clearInterval(scroll_interval);
+                        }else if (chech(x,["send","text"]) && chech(x,["me"]) && chech(x,["text","result"]) && $(".text_data").length>0) {
+                          system_speak("please say your phone number");
+                          engine.context.context = "send_text";
+                          engine.context.data = "office_hours";
+                          phone_number =false;
+                        }
+                        else if(x.indexOf("number")!==-1 || (parseInt(x)|| x==="0")){
+                          FindfromNumber(x,"hours");
+                        }
+                         else if (chech(x,["show","list"]) && chech(x,["office"]) && chech(x,["all"])  && chech(x,["hours","hour","schedule"]) ) {
+                           //changedLocation("/teachers?course=list");
+                           system_speak("here is a list of all available office hours, here at point park university");
+                           changedLocation("hours?list=all");
+                         }
+                         else if( chech(x,["letter"])){
+                            scrollView(x,".course_scroll");
+                         }
+                         else if (x.indexOf("scroll")!==-1 || x.indexOf("school")!==-1) {
+                           scrollView(x,".course_scroll");
+                         }
+                         else {
+                           if(!proc){
+                              standard(x,"hours");
+                           }else {
+                             system_speak("I did not Understand,but,  here is a list of all available office hours");
+                             changedLocation("hours?list=all");
+                           }
+                         }
+                          break;
+                        case "suggestion":
+                               if(chech(x,["yes"])){
+                                 saveSuggestion(suggestion);
+                                  system_speak("suggestion saved., "+suggestion);
+                                  if(engine.context.data.should_return){
+                                    engine.context.context = engine.context.data.should_return;
+                                    engine.context.data = false;
+                                  }else {
+                                    engine.context.context = "normal";
+                                    engine.context.data = false;
+                                  }
+                               }else if (chech(x,["no"])) {
+                                  system_speak("please  tell me your suggestion");
+                               }else if(!chech(x,["suggestion"])){
+                                 var suggested= x;
+                                 system_speak(suggested+", is that your suggestion? ");
+                                  suggestion.push(suggested);
+                                 //system_speak("Nice to meet you, "+name+"! ");
+
+                               }else if (chech(x,["cancel","nevermind"]) || (chech(x,["suggestion"]) && chech(x,["no","cancel"]))) {
+                                 engine.context.context = "normal";
+                                   system_speak("ok ");
+                               }else {
+                                 system_speak("what is your suggestion? ");
+                                   engine.context.context = "suggestion";
+                               }
+
+                        break;
+                        case "user_name":
+                               if(chech(x,["yes"])){
+                                  system_speak("Nice to meet you, "+user_name+"! ");
+                                  if(engine.context.data.should_return){
+                                    engine.context.context = engine.context.data.should_return;
+                                    engine.context.data = false;
+                                  }else {
+                                    engine.context.context = "normal";
+                                    engine.context.data = false;
+                                  }
+                               }else if (chech(x,["no"])) {
+                                  system_speak("please  spell your name");
+                               }else {
+                                 var name = x.replace( /name|is|my| /g, "" );
+                                 system_speak(name+", is that your name? ");
+                                  user_name = name;
+                                 //system_speak("Nice to meet you, "+name+"! ");
+
+                               }
+
+                        break;
+
+                      case "location":
+                         if(chech(x,["where"]) && chech(x,["is"]) ){
+                            functions.get_location(x);
+                         }else if(chech(x,["rotation","orient","rotate","move"]) ) {
+
+                           var heading = map.getHeading() || 0;
+                             console.log("r",heading);
+                           map.setHeading(heading + 45);
+                         }else if (chech(x,["send","text"]) && chech(x,["me"]) && chech(x,["text","result"]) && $(".text_data").length>0) {
+                           system_speak("please say your phone number");
+                           engine.context.context = "send_text";
+                           engine.context.data = "location";
+                           phone_number =false;
+                         }
+
+                         else if((x.indexOf("some")!==-1 && x.indexOf("where")!==-1) || x.indexOf("someplace")!==-1 ){
+                            changedLocation("locations?location="+x+"");
+                            reply("where?");
+                            system_speak("searching");
+                         }else if (x.indexOf("stop")!==-1 ) {
+                           clearInterval(scroll_interval);
+                         }
+                          else if((chech(x,["list"]) && chech(x,["location","locations"]) ) || (chech(x,["list","show"]) && chech(x,["all"])  && chech(x,["location","locations"]) )){
+                            system_speak("here is a list of some locations, here at Point Park");
+                            changedLocation("locations?location=all_data");
+                          }else if (x.indexOf("number")!==-1) {
+                            system_speak("ok");
+                            FindfromNumber(x,"locations");
+                          }
+                          else if( chech(x,["letter"])){
+                             scrollView(x,".location_scroll");
+                          }
+                          else if (x.indexOf("scroll")!==-1 ) {
+                            scrollView(x,".location_scroll");
+                          }
+                          else {
+                            if(!proc){
+                              standard(x,"location");
+                            }else {
+                              system_speak("What location are you looking for?, for Eaxample, you can say, where is the library, Angela");
+                            }
+                          }
+                          break;
+                          case "courses":
+                          console.log("courses~~~~~~~");
+                          //see if recognized a class Name
+                           // var test = replaceNumbers(x);
+                           // test =test.trim();
+                           // //var arr  = test.replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,"").split(" ");
+                           // var r = isClassRecognized(x);
+
+                          if (x.indexOf("stop")!==-1 ) {
+                            engine.beep();
+                            clearInterval(scroll_interval);
+                          }else if (chech(x,["send","text"]) && chech(x,["me"]) && chech(x,["text","result"]) && $(".text_data").length>0) {
+                            system_speak("please say your phone number");
+                            engine.context.context = "send_text";
+                            engine.context.data = "courses";
+                            phone_number =false;
+                          }
+                          else if(x.indexOf("number")!==-1 || (parseInt(x)|| x==="0")){
+                            FindfromNumber(x,"courses");
+                          }
+                          else if( chech(x,["letter"])){
+                             scrollView(x,".course_scroll");
+                          }
+                           else if ((chech(x,["list"]) && chech(x,["classes","courses"]) ) || (chech(x,["list","show"]) && chech(x,["all"])&& chech(x,["classes","courses"]) ) ) {
+                             //changedLocation("/teachers?course=list");
+                             system_speak("here is a list of all courses, here at point park university");
+                             changedLocation("courses?course=list");
+                           }
+                           else if (x.indexOf("scroll")!==-1 || x.indexOf("school")!==-1) {
+                             scrollView(x,".course_scroll");
+                           }
+                           else {
+                             if(!proc){
+                                standard(x,"courses");
+                             }else {
+                               system_speak("I did not understand, but here is a list of all course. just tell me the index number of your course title");
+                               changedLocation("courses?course=list");
+                             }
+                           }
+                            break;
+                            case "send_text":
+                            if(chech(x,["yes"]) && phone_number){
+                              //text message
+                             var message = "";
+                             for(var i =0; i<$(".text_data").length; i++){
+                               console.log($(".text_data")[i].name);
+                               if($(".text_data")[i].name!=="year" && $(".text_data")[i].name!=="term" && $(".text_data")[i].name!=="course_code" && $(".text_data")[i].name!=="course_capacity" && $(".text_data")[i].name!=="course_enrollment" && $(".text_data")[i].name!=="credit_hours"){
+                                 message+=($(".text_data")[i].name.replace(/_|instructor|date|course|title:/gi," ").trim()+":"+$(".text_data")[i].value)+", ";
+                               }
+
+                             }
+                             console.log(message = message.trim());
+                               if(message.length>160){
+                                 system_speak("message too long");
+                               }else{
+                                 $.ajax({
+                                     url: "send-message",
+                                     type: 'POST',
+                                     data:{number:phone_number ,message: message.trim()},
+                                     success: function(result){
+                                         console.log(result);
+                                     },
+                                });
+                                system_speak("text sent to number"+phone_number+"! ");
+                               }
+                               if(engine.context.data.should_return){
+                                 engine.context.context = engine.context.data.should_return;
+                                 engine.context.data = false;
+                               }else {
+                                 engine.context.context =engine.context.data;
+                                 engine.context.data = false;
+                               }
+                            }else if (chech(x,["nevermind","cancel"])) {
+                              engine.context.context = engine.context.data;
+                              system_speak("ok");
+                            }else if (chech(x,["no"])) {
+                               system_speak("please  say  your number, or say cancel, or nevermind to cancel");
+                            }else {
+                              var number = x.split(" ");
+                              for(var i =0; i<number.length; i++){
+                                if(parseInt(number[i].replace(/-/gi,""))){
+                                  console.log("phone",number[i]);
+                                  phone_number= number[i];
+                                }
+                              }
+                              if(phone_number.length>0){
+                                if(phone_number.trim().length===12){
+
+                                  system_speak("is this your number?, "+phone_number);
+                                }else {
+                                  console.log("phone",phone_number,phone_number.trim().length);
+                                  system_speak("That does not look like a number, please  say  your number, or, say nevermind, or cancel");
+                                }
+                              }else {
+                                standard(x,"send_text");
+                              }
+                            }
+
+                            break;
+                            case "events":
+                              if(chech(x,["today"])){
+                                system_speak("ok, this is supposed to be today events");
+                                changedLocation("events?time=today");
+                              }
+                              else if((chech(x,["all"]) &&  chech(x,["show","display"]) &&  chech(x,["events","event"])) || chech(x,["list"]) ){
+                                system_speak("showing all events");
+                                changedLocation("events?time=all");
+                              }else if (chech(x,["now"])) {
+                                system_speak("let see what is happening right now At Point Park University");
+                                changedLocation("events?time=now");
+                              }
+                              else if (x.indexOf("tomorrow")!==-1) {
+                                system_speak("showing tomorrow events");
+                                var tomorrow = getTomorrowDate();
+
+                                changedLocation("events?time=tomorrow&month="+tomorrow.month+"&date="+tomorrow.date+"");
+                              }else if (chech(x,days) || chech(x,months)  ) {
+                                //x= x.replace(/th/gi,"");
+                                system_speak("let see");
+                                changedLocation("events?time=date&value="+x+"");
+                              }
+                              else if (chech(x,["yesterday"])) {
+                                system_speak("Sorry, i don't know how to do that");
+                              }else if (chech(x,["when","tell","display","show"]) && chech(x,["is","next","event"])  ) {
+                                //x= x.replace(/th/gi,"");
+                                system_speak("let see");
+                                x = x.replace(/when|tell|is|next|event|events|the|'s|display|show/gi,"").trim();
+                                changedLocation("events?time=specific&value="+x+"");
+                              }
+                              else if (chech(x,["scroll","school"])) {
+                                scrollView(x,".events_scroll");
+                              }
+                              else {
+                                reply("I did not understand");
+                                standard(x,"events");
+                              }
+
+                            break;
+                      default:
+
+                    }
 
                 }
-              }, 700);
-            }
-            finalTrans='';
+              }
+
+              function reply(x){
+                system_conversation = x;
+                $("#system").html("<p><span style='color:darkgrey;'>System: </span>"+x+"</p>");
+              }
+
+              function standard(x,last_context){
+                console.log("standard");
+                proc(x,last_context);
+              }
+
+
+
+               function speakSoftly(text){
+                 VoiceRSS.speech({
+                      key: '6589551c18dc4441867cdc64eef0a85f',
+                      src: text,
+                      hl: 'en-us',
+                      r: 0,
+                      c: 'mp3',
+                      f: '44khz_16bit_stereo',
+                      ssml: false
+                  });
+               }
+
+               function replaceNumbers(x){
+                 var description={
+                   "one":"i",
+                   "1":"i",
+                   "2":"ii",
+                   "3":"iii",
+                   "4":"iv",
+                   "5":"v",
+                   "6":"vi",
+                   "7":"vii",
+                   "8":"viii",
+                 }
+                 for(key in description ){
+                   if(x.indexOf(key)!==-1){
+                     var reg = new RegExp(key, "g");
+                      x=x.replace(reg, description[key]);
+                   }
+                 }
+                 return x;
+               }
+
+               function FindfromNumber(x,page){
+                 var description={
+                   "one":"i",
+                   "1":"i",
+                   "2":"ii",
+                   "3":"iii",
+                   "4":"iv",
+                   "5":"v",
+                   "6":"vi",
+                   "7":"vii",
+                   "8":"viii",
+                 }
+                 x = x.replace(/one/gi, "1").replace(/for/gi, "4");
+                 var temp = x.split(" ");
+                 for(var i =0; i< temp.length; i++){
+                   var num = parseInt(temp[i]);
+                   if(num || num===0){
+                      for(var j =0; j< $(".course_index").length; j++){
+                        if(parseInt($(".course_index")[j].dataset.index) ===num){
+                          var dataset = $(".course_index")[j].dataset;
+                           var found_course_name =dataset.name;
+                           var found_last_name =dataset.lastname;
+                            var toSay = found_course_name.toLowerCase().split(" ");
+                           for(elt in description){
+                             var idx = toSay.indexOf(description[elt]);
+                             if(idx!==-1){
+                               toSay[idx] = elt;
+                             }
+                           }
+                           system_speak("here is, "+toSay.toString());
+                           if(found_last_name && found_course_name){
+                                changedLocation("hours?firstname="+found_course_name.toLowerCase()+"&lastname="+found_last_name.toLowerCase()+"");
+                           }else{
+                                changedLocation(page+"?"+dataset.target+"="+found_course_name+"");
+                           }
+                          break;
+                        }
+                      }
+                      break;
+                   }
+                 }
+               }
+               function scrollView(x, target ){
+                  if ((x.indexOf("top")!==-1 || (x.indexOf("all")!==-1 && x.indexOf("up")!==-1 ) )) {
+                   $(target).animate({
+                     scrollTop:"0"
+                   },1000);
+                 }
+                 else if ((x.indexOf("bottom")!==-1 || (x.indexOf("all")!==-1 && x.indexOf("down")!==-1 ) )) {
+                   $(target).animate({
+                     scrollTop:$(target)[0].scrollHeight
+                   },1000);
+                 }
+                 else if (x.indexOf("down")!==-1) {
+                   $(target).animate({
+                     scrollTop:"+=300"
+                   },1000);
+                 }
+                 else if(x.indexOf("up")!==-1 || x.indexOf("app")!==-1){
+                   $(target).animate({
+                     scrollTop:"-=300"
+                   },1000);
+                 }
+                 else if(x.indexOf("until")!==-1 || x.indexOf("continuously")!==-1){
+                   scroll_interval = setInterval(function(){
+                     $(target).animate({
+                       scrollTop:"+=1"
+                     },0);
+                   },30);
+
+                 }else  {
+                   var abc =["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+                   var text = x.split(" ");
+                   var recognizeLetter = false;
+                   for(var z=0; z< text.length; z++){
+                     if(abc.indexOf(text[z])!==-1){
+                        recognizeLetter = text[z];
+                        console.log(text[z]);
+                       break;
+                     }
+                   }
+                   if(recognizeLetter){
+                     var tds = $(target).find("td");
+                     for(var i =0; i< tds.length; i++){
+                      if(tds[i].dataset.name&& tds[i].dataset.name[0].toLowerCase() ===recognizeLetter){
+                        $(target).animate({
+                          scrollTop:"0"
+                        },100,function(){
+                          $(target).animate({
+                            scrollTop:$(tds[i]).offset().top -30
+                          },1000);
+                        });
+                         return;
+                       }
+                     }
+                   }
+                 }
+               }
+
+
+               function chech(phrase0,target){
+                   var phrase = phrase0.split(" ");
+                   for(var i =0; i< target.length; i++){
+                     for(var j =0; j< phrase.length; j++){
+                       if(target[i] === phrase[j] || target[i]+"s" === phrase[j]){
+                         return true;
+                       }
+                     }
+                   }
+                   return false;
+               }
+
+             function getTomorrowDate(){
+               var today = new Date();
+               var this_year  = today.getFullYear();
+               var this_Month  = today.getMonth();
+               var lastDate  = new Date(this_year, this_Month + 1, 0).getDate();
+
+               var tomorrow  = today.getDate()+1,month=this_Month;
+               if(tomorrow>lastDate){
+                 tomorrow=1;
+                 month =this_Month+1;
+               }
+               return {date:tomorrow,month:month};
+             }
+
+             function postRequest(url,data,callback){
+               $.ajax({
+                   url: url,
+                   type: 'GET',
+                   data:data,
+                   success: function(result){
+                       callback(result);
+                   },
+                   error: function(){
+                      console.log("error");
+                    }
+              });
+             }
+             function getData(){
+               $.ajax({
+                   url: "getData",
+                   type: 'POST',
+                   success: function(data){
+                       if(data.success){
+
+                         all_locations = data.success["departments.csv"];
+                         all_classes = data.success["teachers0.csv"];
+                         faculty_hours = data.success["faculty_hours.csv"];
+                       }
+                   },
+                   error: function(){
+                      console.log("error");
+                    }
+              });
+             }
+             getData();
+             function iSlocationRecognized(text){
+               var arr  = text.replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,"").split(" ");
+               var locations = all_locations;
+               var nearPhrase={max:0,findings:[]};
+               for( key in locations){
+                 var l = (locations[key].department.toLowerCase()).replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,"");
+                 var r = phraseCheck(l,arr);
+                 var c  = r.findings;
+                 //console.log(l, phraseCheck(l,arr).count);
+                 if(nearPhrase.max<c.length){
+                   //nearPhrase.phrase = l;
+                   nearPhrase.max = c.length;
+                   nearPhrase.findings=[{data:locations[key],certainty:100-(arr.length -r.count)}];
+                  }
+                  else if (nearPhrase.max === c.length && nearPhrase.max!==0) {
+                   nearPhrase.findings.push({data:locations[key],certainty: 100-(arr.length -r.count)});
+                 }
+               }
+               //choose the one with more certainty
+               var chosen = {max:0,findings:[]};
+               for(key in nearPhrase.findings){
+                 if(nearPhrase.findings[key].certainty> chosen.max){
+                   chosen.max = nearPhrase.findings[key].certainty;
+                    chosen.findings=[{data:nearPhrase.findings[key].data}];
+                 }else if (nearPhrase.findings[key].certainty=== chosen.max && chosen.max!==0) {
+                     chosen.findings.push({data:nearPhrase.findings[key].data});
+                 }
+               }
+                //console.log("key",chosen);
+               return chosen;
+             }
+             var current_chosen_options={};
+             function isOfficeHoursRecognize(arr0){
+               var arr  = arr0.toLowerCase().replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,"").split(" ");
+               var hours = faculty_hours;
+               var nearPhrase={max:0,findings:[]};
+               var teacher_firstname='';
+               for( key in hours){
+                 var first_l = (hours[key].first_name.toLowerCase()).replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,"");
+                 var last_n = (hours[key].last_name.toLowerCase()).replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,"");
+                 var r = phraseCheck(first_l,arr);
+                 var r2 = phraseCheck(last_n,arr);
+                 var c  = r.findings, b = r2.findings;
+                 if(r.findings.length>0 && arr.indexOf(last_n)!==-1){
+                   //console.log("exact match");
+                   getCorB(c,r);
+                 }else if (r.findings.length>0 && arr.indexOf(last_n)===-1) {
+                    //console.log("do you mean", first_l, last_n);
+                    getCorB(c,r);
+                 }else if (r2.findings.length>0 && arr.indexOf(first_l)!==-1) {
+                  // console.log("exact match by last name search");
+                   getCorB(b,r2);
+                 }else if (r2.findings.length>0 && arr.indexOf(first_l)===-1) {
+                     //console.log("do you mean", first_l, last_n);
+                     getCorB(b,r2);
+                 }
+                 //console.log(l, phraseCheck(l,arr).count);
+                 function getCorB(choice,d){
+                   if(nearPhrase.max<choice.length){
+                     //nearPhrase.phrase = l;
+                     nearPhrase.max = choice.length;
+                     nearPhrase.findings=[{data:hours[key],certainty:100-(arr.length -d.count)}];
+                    }
+                    else if (nearPhrase.max === choice.length && nearPhrase.max!==0) {
+                     nearPhrase.findings.push({data:hours[key],certainty: 100-(arr.length -d.count)});
+                   }
+                 }
+                 teacher_firstname = first_l;
+               }
+               //choose the one with more certainty
+               var chosen = {max:0,findings:[]};
+               for(key in nearPhrase.findings){
+                 if(nearPhrase.findings[key].certainty> chosen.max){
+                   chosen.max = nearPhrase.findings[key].certainty;
+                    chosen.findings=[{data:nearPhrase.findings[key].data}];
+                 }else if (nearPhrase.findings[key].certainty=== chosen.max && chosen.max!==0) {
+                     chosen.findings.push({data:nearPhrase.findings[key].data});
+                 }
+               }
+                //console.log("key",chosen);
+                if(chosen.findings.length>1){
+                  var names = "I found "+chosen.findings.length+" "+chosen.findings[0].data.first_name+", " ;
+                  for(var ch=0; ch<chosen.findings.length; ch++){
+                    names+=(ch===chosen.findings.length-1?"and, ":"")+ chosen.findings[ch].data.first_name+" "+ chosen.findings[ch].data.last_name+","
+                  }
+                   system_speak(names);
+                   return {firstname:chosen.findings[0].data.first_name};
+                }else if (chosen.findings.length===1) {
+                  tellOfficeHours(chosen.findings)
+                  return {firstname:chosen.findings[0].data.first_name,lastname:chosen.findings[0].data.last_name};
+                }else {
+                    return false;
+                }
+             }
+
+
+             function tellOfficeHours(findings){
+               var da = findings[0].data;
+               var saying = da.first_name+" "+da.last_name+", ";
+               for(var m =0; m<days.length; m++){
+                 if(da[days[m]] && da[days[m]].trim().length>0){
+                   saying +=', on '+days[m]+", ";
+                   var this_day_saying =da[days[m]].trim().split(",");
+                   var count =0;
+                   for(var z =0; z<this_day_saying.length; z++){
+                     if((this_day_saying[z].toLowerCase().indexOf("pm")!==-1) || (this_day_saying[z].toLowerCase().indexOf("am")!==-1)){
+                       count +=1;
+                       saying+=(count>1?" and "+this_day_saying[z]:da.first_name+" say that his office hours are , "+ this_day_saying[z]+", ");
+                     }else {
+                       count =0;
+                       saying+=this_day_saying[z];
+                     }
+                   }
+                 }
+               }
+
+               system_speak(saying);
+             }
+             function isClassRecognized(text){
+               var arr  = text.replace(/'s|!|,|\.|\?|@|#|\$|%|\^|&|\*|\(|\)|_|-|\+|\=|\[|\]|{|}|\/|\||\"|\\|`|~|:|;|'|/gi,"").split(" ");
+               var classes = all_classes;
+               var nearPhrase={max:0,findings:[]};
+               for( key in classes){
+                 var l = (classes[key].course_title.toLowerCase()).replace(/\(|\)|\-|\//gi," ");
+                 //console.log(l,"***");
+                 var r = phraseCheckClass(l,arr);
+                 var c  = r.findings;
+                 //console.log(l, phraseCheck(l,arr).count);
+                 if(nearPhrase.max<c.length){
+                   //nearPhrase.phrase = l;
+                   nearPhrase.max = c.length;
+                   nearPhrase.findings=[{data:classes[key],certainty:100-(arr.length -r.count)}];
+                  }
+                  else if (nearPhrase.max === c.length && nearPhrase.max!==0) {
+                   nearPhrase.findings.push({data:classes[key],certainty: 100-(arr.length -r.count)});
+                 }
+               }
+               //choose the one with more certainty
+               var chosen = {max:0,findings:[]};
+               for(key in nearPhrase.findings){
+                 if(nearPhrase.findings[key].certainty> chosen.max){
+                   chosen.max = nearPhrase.findings[key].certainty;
+                    chosen.findings=[{data:nearPhrase.findings[key].data}];
+                 }else if (nearPhrase.findings[key].certainty=== chosen.max && chosen.max!==0) {
+                     chosen.findings.push({data:nearPhrase.findings[key].data});
+                 }
+               }
+                //console.log("key",chosen);
+               return chosen;
+             }
+
+
+             function phraseCheckClass(phrase0,target){
+               var voids= ["the", "to", "at", "a","for","that","and"];
+               var phrase = phrase0.split(" ");
+                 var findings=[],words_found=[],count=target.length;
+                 for(var i =0; i<target.length; i++){
+                   var isThistrue = false;
+                   var founds_word;
+                   for(var j =0; j< phrase.length; j++){
+                     if(target[i] === phrase[j] && voids.indexOf(target[i])===-1  ){ //target[i].length>2
+                       isThistrue = true;
+                       founds_word = target[i];
+                     }else {
+                       count--;
+                     }
+                   }
+                   if(isThistrue){
+                     findings.push(isThistrue);
+                     words_found.push(founds_word);
+                   }
+                 }
+                 if(findings.indexOf(false)===-1){
+
+                 }
+                 if(words_found.length===1 && words_found[0].length<=2){
+                  // console.log("word recognized but small",words_found);so ignored
+                   return {findings:[],count:target.length};
+                 }
+
+                 return {findings:findings,count:count};
+             }
+
+             function phraseCheck(phrase0,target){
+               var voids= ["the", "to", "at", "a"];
+               var phrase = phrase0.split(" ");
+                 var findings=[],count=target.length;
+                 for(var i =0; i<target.length; i++){
+                   var isThistrue = false;
+                   for(var j =0; j< phrase.length; j++){
+                     if(target[i] === phrase[j] && voids.indexOf(target[i])===-1 ){
+                       isThistrue = true;
+                     }else {
+                       count--;
+                     }
+                   }
+                   if(isThistrue){
+                     findings.push(isThistrue);
+                   }
+                 }
+                 if(findings.indexOf(false)===-1){
+
+                 }
+                 return {findings:findings,count:count};
+             }
+
+             function isAdjectives(what){
+               $.ajax({
+                   url: "get-ad",
+                   type: 'POST',
+                   data: {phrase:what},
+                   success: function(data){
+                       if(data.success){
+                         console.log("Adjectives: ",data.success);
+                       }else{
+                        }
+                   },
+                   error: function(){
+                      console.log("error");
+                    }
+              });
+             }
+
+             function getBLob(){
+
+                 var img = new Image();
+                 img.crossOrigin = 'Anonymous';
+                 img.onload = function() {
+                   var canvas = document.createElement('CANVAS');
+                   var ctx = canvas.getContext('2d');
+                   canvas.height = this.naturalHeight;
+                   canvas.width = this.naturalWidth;
+                   ctx.drawImage(this, 0, 0);
+                   var data = canvas.toDataURL();
+                    console.log(data);
+                 };
+                 img.src = "book.png";
+
+             }
+
+
+/// experiment
+var not_found_counts =0;
+function proc(x,last_context){
+  console.log("proc",x);
+  var actions = myProcess.questions;
+  var found = false;
+  for(question in actions){
+    var ands = question.split("&");
+    if(ands.length>1){
+      var allAnds={};
+      for(var i =0; i<ands.length; i++){
+        allAnds["ands"+i]=ands[i];
+      }
+      allOrs ={};
+      for(var i =0; i<Object.keys(allAnds).length; i++){
+        allOrs["ors"+i]=allAnds[Object.keys(allAnds)[i]].split(",");
+      }
+      var allTrue =[];
+      for(key in allOrs){
+        if(chech(x,allOrs[key])){
+          allTrue.push(true);
+        }else {
+          allTrue.push(false);
+        }
+      }
+      if(allTrue.indexOf(false)===-1){
+        if(actions[question].speak){
+          system_speak(actions[question].speak);
+        }
+        if(actions[question].param_x){
+          functions[actions[question].func]((actions[question].param_x?x+","+actions[question].param_x:actions[question].param));
+        }else {
+          functions[actions[question].func]((actions[question].param==="x"?x:actions[question].param));
+        }
+        found =true;
+        break;
+      }
+    }else {
+        var ors1 = ands[0].split(",");
+        if(chech(x,ors1)){
+          if(actions[question].speak){
+            system_speak(actions[question].speak);
           }
+          if(actions[question].param_x){
+            functions[actions[question].func]((actions[question].param_x?x+","+actions[question].param_x:actions[question].param));
+          }else {
+            functions[actions[question].func]((actions[question].param==="x"?x:actions[question].param));
+          }
+          found = true;
+          break;
+        }
+    }
+  }
+  if(!found){
+    not_found_counts +=1;
+    console.log("~~~~~~not found count",not_found_counts);
+   if(not_found_counts >2){
+     system_speak("Angela did not understand, here is a list of Commmand Angela Understand");
+     not_found_counts =0;
+     functions.show_help();
+   }else {
+    reply("Angela did not understand");
+   }
+  }
+
+}
+
+var functions ={
+  analyze: function(args){
+     var args =args.split(",");
+     var  x = "Angela "+args[0], arg =args[1];
+     analyze(x,arg,true);
+  },
+  speak: function(arg){
+    var arg=arg.replace(".", (user_name?user_name:"")).replace("#",engine.name);
+    system_speak(arg);
+  },
+  change_location: function(arg){
+    //system_speak("here we are!");
+    changedLocation(arg);
+  },
+  disactivate:function(speak){
+    //clearLocation();
+    pass = false;
+    if(speak){system_speak("ok, disactivated")};
+  },
+  go_back:function(arg){
+    var page_location = localStorage.location;
+    if(page_location && page_location!==undefined){
+      var lastLocation = page_location.split(",");
+      var newNavigation = lastLocation.slice(0,lastLocation.length-2);
+      if(lastLocation[lastLocation.length-2]){
+        localStorage.setItem("location", newNavigation);
+        changedLocation(lastLocation[lastLocation.length-2]);
+      }else {
+        console.log("empty location");
+      }
+    }else {
+      console.log("empty location");
+    }
+  },
+  say_user_name: function(arg){
+    if(user_name){
+      system_speak("your name is "+user_name);
+    }else {
+      system_speak("I don't know, what is your name?");
+      engine.context.context = "user_name";
+    }
+  },
+  show_help: function(arg){
+    var info = help;//[engine.context.context];
+    engine.context.context = "help";
+    engine.context.current_context = "help";
+    engine.context.flash_message ="say close to close help panel"
+    engine.context.example = "";
+    engine.context.data = false;
+    $("#help").fadeIn("slow");
+    system_speak("These are the things you can say!");
+      $("#help_list").empty();
+      console.log("info for help",info,engine.context.context);
+    for(var i =0; i< info.length; i++){
+      $("#help_list").append("<span style='font-size:0.8em;'>\""+info[i]+"\"</span><br>");
+    }
+  },
+  stop:function(){
+      clearInterval(scroll_interval);
+  },
+  get_location:function(x){
+    var result = iSlocationRecognized(x).findings;
+    if(result.length===1){
+      system_speak(result[0].data.department+(result[0].data.location?" is located on the "+result[0].data.location:"")+", here is the map");
+      changedLocation("locations?location="+result[0].data.department+"");
+    }else {
+        reply("I did not understand");
+    }
+  },
+  get_class:function(x){
+     x = replaceNumbers(x);
+     x =x.trim();
+    var r = isClassRecognized(x);
+
+    if(r.findings[0]){
+      system_speak("I found "+r.findings.length+" "+(r.findings.length>1?" classes, here they are":"class, here  it is ")+"");
+      var arr_f=[],st="";
+      for(f in r.findings){
+        if(arr_f.indexOf(r.findings[f].data.course_title)===-1){
+          arr_f.push(r.findings[f].data.course_title);
+          st+=r.findings[f].data.course_title+".";
+        }
       }
 
-      var classes={
-          "cmps361":{
-            "teacher":{
-              "name":"Dr.Voortman",
-              "office": "13th floor west penn building",
-              "hour": "4:00pm to 6:00pm",
-              "day": "Monday"
-            },
-            "name":"web application development",
-            "day": "Thursday",
-            "time":"6:00PM to 9:00PM",
-            "location":"west penn 8th floor , room 804"
-          },
-          "bmgt300":{
-            "teacher":{
-              "name":"Defazio, joseph",
-              "office": "10th floor west penn building",
-              "hour": "2:00pm to 4:00pm",
-              "day": "Thursday"
-            },
-            "name":"Corporate Finance",
-            "day": "Tuesday",
-            "time":"6:00PM to 9:00PM",
-            "location":"west penn 6th floor, room 604"
-          },
-          "bmgt202":{
-            "teacher":{
-              "name":"Fitzhenry, Daniel",
-              "office": "4th floor west penn building",
-              "hour": "4:00pm to 6:00pm",
-              "day": "Monday"
-            },
-            "name":"Business Law 2",
-            "day": "Monday",
-            "time":"6:00PM to 9:00PM",
-            "location":"west penn 7th floor, room 703"
-          }
-      }
+        changedLocation("courses?course="+st+"");
+    }else {
+      system_speak("I did not understand, but here is a list of all course. just tell me the index number of your course title");
+      changedLocation("courses?course=list");
+    }
+  },
+  tell_time:function(){
 
-      </script>
+            var date = new Date();
+            var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+            var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+            hours = hours
+            var minutes = date.getMinutes() < 10 ? "o" + date.getMinutes() : date.getMinutes();
+            time = hours + " : " + minutes+ " " + am_pm;
+            system_speak("It's "+time,"yes");
+
+  },
+  tell_weather:function(x){
+    if( x.indexOf("in") !== -1){
+      var st=x.slice(x.indexOf("in")+3, x.length);
+      var done = false;
+      for(var i =0; i<st.length; i++){
+        if(st.charAt(i) ===" "){
+          var city = st.slice(0, i);
+          console.log("city",city,st);
+          getWeatherInfo(st);
+          //console.log(city.charAt(0), city.charAt(city.length-1));
+          done=true;
+          break;
+        }
+      }
+        if(!done){
+          getWeatherInfo(st);
+          //console.log(st.charAt(0), st.charAt(st.length-1));
+
+        }
+}
+else{
+  getWeatherInfo("pittsburgh");
+}
+
+  },
+}
+
+
+function getWeatherInfo(location){
+  var request = new XMLHttpRequest();
+  var url =  "https://api.apixu.com/v1/forecast.json?key=52959fc784854d1a8ad223809170801&q="+ location;
+  request.open("GET", url);
+  request.onload = function(){
+    var data = JSON.parse(request.responseText);
+    if(data.current){
+      var x = data.current;
+     console.log("weather data ",data);
+     var  weather= x.temp_f;
+     system_speak("the weather is "+x.condition.text+", with a temperature of  "+ weather +" degree fahrenheit, which is "+x.temp_c+" in celsius, right now in "+location+", "+data.location.region);
+
+     // document.getElementById("weatherIcon").src= x.condition.icon;
+     // document.getElementById("weatherLocation").innerHTML= location.toUpperCase();
+     // document.getElementById("weather_c").innerHTML= x.temp_c+"&#8451";
+     //  document.getElementById("weather_f").innerHTML= x.temp_f+"&#x2109;";
+
+    }
+  }
+  request.send();
+
+}
+function showAvailableOptions(title,options){
+  var pane_to_get_title = $("<div id='' title='"+title+"' style='font-size:0.8em;'></div>");
+  for(option in options){
+    pane_to_get_title.append("<p>"+options[option]+"</p>");
+  }
+  $("body").append(pane_to_get_title);
+  $(pane_to_get_title).dialog({
+    resizable: false,
+    height: "auto",
+    width: 400,
+    modal: true,
+  });
+}
+
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1);
+  var a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+function displayCanSay(data){
+  $(".canSay #list").empty();
+  $(".canSay #title").html(data.title);
+  for(var i =0; i<data.options.length; i++){
+      $(".canSay #list").append("<div>"+data.options[i]+"</div>");
+  }
+   if(interval_shake){
+     console.log("interval existed");
+     clearInterval(interval_shake);
+   }else {
+     console.log("interval not existed");
+     var interval_shake = setInterval(function(){
+       $(".canSay #title").effect("shake");
+     },3000);
+   }
+
+}
+
+    function system_speak(x){
+      engine.speak(x);
+      system_conversation =x;
+      saveConversation();
+    }
+
+    function changedLocation(x){
+      system_conversation="changed location to "+x;
+      saveConversation();
+      location.assign(x);
+    }
+
+    function saveConversation(){
+      $.ajax({
+          url: "send-conversation",
+          type: 'POST',
+          data:{user:user_conversation ,system:system_conversation,recognized:(system_conversation?(system_conversation==="Angela did not understand"?false:true):false)},
+          success: function(result){
+              console.log(result);
+          },
+     });
+    }
+
+    function saveSuggestion(x){
+      $.ajax({
+          url: "send-suggestion",
+          type: 'POST',
+          data:{suggestion:x },
+          success: function(result){
+              console.log(result);
+          },
+     });
+    }
+              </script>
+              <div class="col-md-9" id='render_are' style="width:100%;" >
+                    {{{body}}}
+              </div>
+           </div>
+           <!-- <div class="" style=' width:100%;'>
+             <div class="" id='bottom' style="width:100%; height: 30px; background:linear-gradient(#000, #999 50%, #000);  ">
+
+             </div>
+
+          </div> -->
+        </div>
+
+    </div>
+
   </body>
 </html>
-
