@@ -195,6 +195,18 @@ function storeToken(token) {
 app.engine("handlebars",handlebars.engine);
 app.set("view engine","handlebars");
 app.set('port', process.env.PORT || 3001);
+
+app.use(function(req, res, next) {
+  if (req.get("X-Authentication-Key") === secrets.authentication.key) {
+    next();
+  }
+  else {
+    res.status(401);
+    res.setHeader("content-type", "text/plain");
+    res.send("401 Unauthorized");
+  }
+});
+
 app.use(express.static(__dirname +'/public'));
 app.use( function( req, res, next){
   res.locals.showTests = app.get(' env') !== 'production' && req.query.test === '1';
