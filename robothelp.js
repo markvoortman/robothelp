@@ -41,26 +41,42 @@ var campus_events = [];
 var client_secret ;
 browser = new Browser();
 
-var con = mysql.createConnection({
-    host : secrets.host,
-    user : secrets.user,
-    password : secrets.password,
-    database : secrets.database,
-});
-
 function connect(cb){
-  if(con.state ==='disconnected'){
-    con.connect(function(err){
-      if (err){
-        console.log('error: ' + err.stack);
-        return;
-      }
-      cb(con);
+  try {
+    var con = mysql.createConnection({
+      host: secrets.host,
+      user: secrets.user,
+      password: secrets.password,
+      database: secrets.database
     });
-  }else {
-    cb(con);
   }
+  catch (e) {
+    console.log("ERROR: connect: mysql.createConnection(): " + e);
+  }
+  con.connect(function(err) {
+    if (err){
+      console.log("ERROR: connect: con.connect(): " + err);
+    }
+    else {
+      try {
+        cb(con);
+      }
+      catch(e) {
+        console.log("ERROR: connect: cb(con): " + e);
+      }
+      // close connection after 60 seconds
+      setTimeout(function() {
+        try {
+          con.end();
+        }
+        catch (e) {
+          console.log("ERROR: connect: con.end(): " + e);
+        }
+      }, 60*1000);
+    }
+  });
 }
+
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
